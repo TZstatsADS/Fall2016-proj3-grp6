@@ -7,7 +7,8 @@
 ### ADS Spring 2016
 
 ### Specify directories
-setwd("./proj3_sample")
+#setwd("./proj3_sample")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 img_train_dir <- "./data/zipcode_train/"
 img_test_dir <- "./data/zipcode_test/"
@@ -17,6 +18,8 @@ label_train <- read.table("./data/zip_train_label.txt", header=F)
 label_train <- as.numeric(unlist(label_train) == "9")
 
 ### Construct visual feature
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("EBImage")
 source("./lib/feature.R")
 
 tm_feature_train <- system.time(dat_train <- feature(img_train_dir, "img_zip_train"))
