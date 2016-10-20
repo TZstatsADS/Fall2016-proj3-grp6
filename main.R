@@ -44,14 +44,14 @@ for(k in 1:length(depth_values)){
 save(err_cv, file="./output/err_cv.RData")
 
 # Visualize CV results
-pdf("./fig/cv_results.pdf", width=7, height=5)
+#pdf("./fig/cv_results.pdf", width=7, height=5)
 plot(depth_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
      main="Cross Validation Error", type="n", ylim=c(0, 0.15))
 points(depth_values, err_cv[,1], col="blue", pch=16)
 lines(depth_values, err_cv[,1], col="blue")
 arrows(depth_values, err_cv[,1]-err_cv[,2],depth_values, err_cv[,1]+err_cv[,2], 
       length=0.1, angle=90, code=3)
-dev.off()
+#dev.off()
 
 # Choose the best parameter value
 depth_best <- depth_values[which.min(err_cv[,1])]
@@ -70,4 +70,6 @@ cat("Time for constructing training features=", tm_feature_train[1], "s \n")
 cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
 cat("Time for training model=", tm_train[1], "s \n")
 cat("Time for making prediction=", tm_test[1], "s \n")
+
+print(pred_test)
 
