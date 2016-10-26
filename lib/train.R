@@ -26,6 +26,7 @@ train <- function(dat_train, label_train, par=NULL){
     depth <- par$depth
   }
   fit_gbm <- gbm.fit(x=dat_train, y=label_train,
+                     n.trees= 2000,
                      distribution="bernoulli",
                      interaction.depth=depth, 
                      bag.fraction = 0.5,
