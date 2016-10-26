@@ -26,6 +26,9 @@ feature <- function(img_dir, img_name, data_name=NULL){
   n_c <- ncol(img0)
   
   ### store vectorized pixel values of images
+  # Each row represents an image. Tutorial: Total 1289 images in training set
+  # Each column represents a pixel of the image. Tutorial: Total 256 pixels
+  
   dat <- array(dim=c(n_files, n_r*n_c)) 
   for(i in 1:n_files){
     img <- readImage(paste0(img_dir, img_name, "_", i, ".jpg"))
@@ -38,3 +41,12 @@ feature <- function(img_dir, img_name, data_name=NULL){
   }
   return(dat)
 }
+
+feature_base <- function(filename){
+  library(readr)
+  data <- read_csv(paste0("./data/", filename))
+  data <- t(data)
+  return(data)
+}
+
+

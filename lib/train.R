@@ -12,7 +12,7 @@ train <- function(dat_train, label_train, par=NULL){
   ### Train a Gradient Boosting Model (GBM) using processed features from training images
   
   ### Input: 
-  ###  -  processed features from images 
+  ###  -  processed features from images (rows are images, columns are features)
   ###  -  class labels for training images
   ### Output: training model specification
   
@@ -26,7 +26,6 @@ train <- function(dat_train, label_train, par=NULL){
     depth <- par$depth
   }
   fit_gbm <- gbm.fit(x=dat_train, y=label_train,
-                     n.trees=2000,
                      distribution="bernoulli",
                      interaction.depth=depth, 
                      bag.fraction = 0.5,
