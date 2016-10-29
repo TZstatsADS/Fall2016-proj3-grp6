@@ -1,102 +1,91 @@
 ---
-title: "Main Script"
-author: "Yuting Ma"
-date: "February 24, 2016"
-output: html_document
+title: "Image recognition | Chicken or Dog?"
+author: "Team 6"
+#date: "October 17, 2016"
+output: 
+  html_notebook: default
 ---
 
-This is a template for running experiments of image analysis (or any predictive modeling). The R script can be found in main.R. 
+
+```{r setup, include=FALSE}
+install.packages("ggfortify")
+install.packages("lfda")
+install.packages("matrixStats")
+
+
+library(ggfortify)
+library(lfda)
+library(plotly)
+library(MASS)
+library(matrixStats)
+
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(out.width='750px', dpi=200)
 
 ### Specify directories
-Set the working directory to the image folder. Specify the training and the testing set. For data without an independent test/validation set, you need to create your own testing data by random subsampling. In order to obain reproducible results, set.seed() whenever randomization is used. 
-```{r, eval=FALSE}
-setwd("./proj3_sample")
-```
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-```{r}
-img_train_dir <- "./data/zipcode_train/"
-img_test_dir <- "./data/zipcode_test/"
-```
+img_train_dir <- "./data/images/"
+num_chicken <- 1000
+num_dog <- 1000
+label_train <- c(rep(0, num_chicken), rep(1, num_dog))
 
-### Import training images class labels
-For the example of zip code digits, we code digit 9 as "1" and digit 7 as "0" for binary classification.
-```{r}
-label_train <- read.table("./data/zip_train_label.txt", header=F)
-label_train <- as.numeric(unlist(label_train) == "9")
-```
-
-### Construct visual feature
-For this simple example, we use the raw pixel values as the visual features. Note that this strategy only works for images with uniform size and with identical layout. For some other image datasets, the feature function should be able to handle heterogeneous input images. Save the constructed features to the output subfolder.
-```{r}
+### Construct visual feature ----
 source("./lib/feature.R")
-tm_feature_train <- system.time(dat_train <- feature(img_train_dir, "img_zip_train"))
-tm_feature_test <- system.time(dat_test <- feature(img_test_dir, "img_zip_test"))
-save(dat_train, file="./output/feature_train.RData")
-save(dat_test, file="./output/feature_test.RData")
+tm_feature_train <- system.time(dat_train <- feature_base("sift_features.csv"))
+# Columns are images. Rows are SIFT features. Got to transpose.
 ```
 
-### Train a classification model with training images
-Call the train model and test model from library. 
-```{r}
-source("./lib/train.R")
-source("./lib/test.R")
-```
+## 1. Principal Component Analycis (PCA) 
+### to reduce dimensionality of SIFT features
+```{r, echo=FALSE}
+# PCA
 
-### Model selection with cross-validation
-* Do model selection by choosing among different values of training model parameters, that is, the interaction depth for GBM in this example. 
-```{r, eval=FALSE}
-source("./lib/cross_validation.R")
-depth_values <- seq(3, 11, 2)
-err_cv <- array(dim=c(length(depth_values), 2))
-K <- 5  # number of CV folds
-for(k in 1:length(depth_values)){
-  cat("k=", k, "\n")
-  err_cv[k,] <- cv.function(dat_train, label_train, depth_values[k], K)
-}
-save(err_cv, file="./output/err_cv.RData")
+sift.pca <- prcomp(dat_train)
+?prcomp
+plot(cumsum(sift.pca$sdev)/sum(sift.pca$sdev),
+     main ="Cumulative variance captured | PCA over SIFT features",
+     sub = paste("Total features = ", ncol(dat_train), ", Total Images = ", nrow(dat_train)), 
+     xlab = "# of Components",
+     ylab = "% of Variance")
 ```
+<br>
+**PCA does not seem to help reducing the dimensionality of the problem. Poor correlation between features.**
+
+----
+### 2. LFDA Fisher discriminant analysis. Plotting FD1 vs FD2
+```{r, echo=FALSE}
+label.train <- as.data.frame(label_train)
+names(label.train) <- c("val")
+label.train$val <- as.factor(label.train$val)
+
+fda.model <- lfda(x = dat_train[,1:1900], y = label.train$val, r = 1900, metric="plain")
+#autoplot(fda.model, data = label.train, frame = TRUE, frame.colour = "val")
+Z <- as.data.frame(fda.model$Z)
+names(Z) <- c(1:1900)
+plot_ly(data = Z, x = Z[,1]*100000, y = Z[,2]*100000, color = label.train$val, mode="markers" ) 
+
+```
+<br>
+**We seem to have a lead here. Linear separation between classes.**
 
 ```{r, echo=FALSE}
-depth_values <- seq(3, 11, 2)
-load("./output/err_cv.RData")
+dat.train.labeled <- cbind(dat_train[,1:1900], label.train)
+
+names(dat.train.labeled)[1500:1901]
+
+lda.model <- lda(formula = val ~ .,
+                 data = dat.train.labeled)
+
+## Filter the first decile of lowest variances
+variance.train.labeled <- colVars(as.matrix(dat.train.labeled[,1:1900]))
+variance.train.labeled <- as.data.frame(variance.train.labeled)
+variance.train.labeled.first.decile <- quantile(variance.train.labeled$variance.train.labeled, probs = .1)
+variance.train.labeled$cutlow <- variance.train.labeled[,1] <= variance.train.labeled.first.decile
+
+## Variables seem constant. Calculate variance. Filter low variance (ones who dont change).  Re Run.
+## Create LDA with the variables that are not filtered. Re run. Should work now!
 ```
 
-* Visualize CV results
-```{r}
-#pdf("./fig/cv_results.pdf", width=7, height=5)
-plot(depth_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
-     main="Cross Validation Error", type="n", ylim=c(0, 0.15))
-points(depth_values, err_cv[,1], col="blue", pch=16)
-lines(depth_values, err_cv[,1], col="blue")
-arrows(depth_values, err_cv[,1]-err_cv[,2],depth_values, err_cv[,1]+err_cv[,2], 
-      length=0.1, angle=90, code=3)
-#dev.off()
-```
-
-* Choose the "best"" parameter value
-```{r}
-depth_best <- depth_values[which.min(err_cv[,1])]
-par_best <- list(depth=depth_best)
-```
-
-* Train the model with the entire training set using the selected model (model parameter) via cross-validation.
-```{r}
-tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
-save(fit_train, file="./output/fit_train.RData")
-```
-
-### Make prediction 
-Feed the final training model with the completely holdout testing data. 
-```{r}
-tm_test <- system.time(pred_test <- test(fit_train, dat_test))
-save(pred_test, file="./output/pred_test.RData")
-```
-
-### Summarize Running Time
-Prediction performance matters, do does the running times for constructing features and for training the model, especially when the computation resource is limited. 
-```{r}
-cat("Time for constructing training features=", tm_feature_train[1], "s \n")
-cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
-cat("Time for training model=", tm_train[1], "s \n")
-cat("Time for making prediction=", tm_test[1], "s \n")
-```
