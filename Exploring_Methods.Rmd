@@ -63,12 +63,6 @@ plot(cumsum(sift.pca$sdev)/sum(sift.pca$sdev),
 ### 2. LFDA Fisher discriminant analysis. Plotting FD1 vs FD2
 ```{r, echo=FALSE, out.width=12, fig.align="center", fig.width=12}
 
-z.labeled.fewCols <- cbind(Z[,1:2], label.train)
-
-svm.model <- svm(val ~ ., 
-                 data = z.labeled.fewCols,
-                 cross = 10)
-
 fda.model <- lfda(x = dat.train[,1:1900], y = label.train$val, r = 1900, metric="plain")
 
 Z <- as.data.frame(fda.model$Z)

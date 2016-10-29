@@ -24,3 +24,10 @@ test <- function(fit_train, dat_test){
   return(as.numeric(pred> 0.5))
 }
 
+test.JG <- function(fit.train, dat.test){
+
+  pred <- predict(fit.train, dat.test)
+  
+  return(pred)
+}
+

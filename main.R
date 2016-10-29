@@ -59,7 +59,7 @@ err_cv <- array(dim=c(length(depth_values), 2))
 K <- 3  # number of CV folds
 for(k in 1:length(depth_values)){
   cat("k=", k, "\n")
-  err_cv[k,] <- cv.function.JG(dat.train, label.train, depth_values[k], K)
+  err_cv[k,] <- cv.function(dat.train, label.train, depth_values[k], K)
 }
 save(err_cv, file="./output/err_cv.RData")
 

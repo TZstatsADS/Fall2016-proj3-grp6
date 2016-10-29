@@ -16,13 +16,13 @@ cv.function <- function(X.train, y.train, d, K){
   
   for (i in 1:K){
     train.data <- X.train[s != i,]
-    train.label <- y.train[s != i]
+    train.label <- y.train[s != i,]
     test.data <- X.train[s == i,]
-    test.label <- y.train[s == i]
+    test.label <- y.train[s == i,]
     
     par <- list(depth=d)
-    fit <- train(train.data, train.label, par)
-    pred <- test(fit, test.data)  
+    fit <- train.JG(train.data, train.label, par)
+    pred <- test.JG(fit, test.data)  
     cv.error[i] <- mean(pred != test.label)  
     
   }			
