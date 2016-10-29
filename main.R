@@ -39,7 +39,7 @@ names(label.train) <- c("val")
 
 ### Construct visual feature ----
 source("./lib/feature.R")
-tm_feature_train <- system.time(dat.train <- feature.base("sift_features.csv"))
+tm_feature_train <- system.time(dat.train <- feature.JG("sift_features.csv"))
 # Columns are images. Rows are SIFT features. Got to transpose.
 
 save(dat.train, file="./output/feature_train.RData")

@@ -35,3 +35,28 @@ train <- function(dat_train, label_train, par=NULL){
 
   return(list(fit=fit_gbm, iter=best_iter))
 }
+
+train.JG <- function(dat.train, label.train, par=NULL){
+  
+  # 1. Create FDA dimensions
+  ## First filter out columns with zero and low variance.
+  lowVariance <- nearZeroVar(dat.train)
+  dat.train.variance <- dat.train[,-lowVariance]
+  good.variance.ncol <- ncol(dat.train.variance)
+  numcol.to.use <- ceiling(min(good.variance.ncol, nrow(dat.train.variance))*0.95)
+  
+  ## Run FDA and extract transformed data  
+  fda.model <- lfda(x = dat.train[,1:numcol.to.use], y = label.train$val, r = numcol.to.use, metric="plain")
+  z <- as.data.frame(fda.model$Z)
+  
+  # 2. Run SVM
+  ## Filter a reduced subset of the columns
+  z.fewCols <- z[1:2]
+  ## Run and return
+  svm.model <- svm(x = z.fewCols, 
+                   y = label.train)
+  return(svm.model)
+}
+
+
+
