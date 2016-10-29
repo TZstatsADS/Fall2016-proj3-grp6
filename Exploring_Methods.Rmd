@@ -1,0 +1,159 @@
+---
+title: "Image recognition | Chicken or Dog?"
+author: "Team 6"
+output:  html_notebook
+---
+
+
+```{r setup, include=FALSE}
+rm(list = ls())
+
+# Install missing packages
+list.of.packages <- c("lfda", "plotly", "MASS", "matrixStats", "caret", "e1071")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+library(lfda)
+library(plotly)
+library(MASS)
+library(matrixStats)
+library(caret)
+library(e1071)
+
+knitr::opts_chunk$set(echo = TRUE, fig.width = 12)
+#knitr::opts_chunk$set(out.width='750px', dpi=200)
+
+### Specify directories
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+```
+
+```{r, echo=FALSE}
+
+img_train_dir <- "./data/images/"
+num.chicken <- 1000
+num.dog <- 1000
+label.train <- c(rep(0, num.chicken), rep(1, num.dog))
+label.train <- as.data.frame(label.train)
+names(label.train) <- c("val")
+label.train$val <- as.factor(label.train$val)
+
+### Construct visual feature ----
+source("./lib/feature.R")
+tm_feature_train <- system.time(dat.train <- feature.base("sift_features.csv"))
+# Columns are images. Rows are SIFT features. Got to transpose.
+```
+
+## 1. Principal Component Analycis (PCA) 
+### to reduce dimensionality of SIFT features
+```{r, echo=FALSE}
+# PCA
+
+sift.pca <- prcomp(dat.train)
+?prcomp
+plot(cumsum(sift.pca$sdev)/sum(sift.pca$sdev),
+     main ="Cumulative variance captured | PCA over SIFT features",
+     sub = paste("Total features = ", ncol(dat.train), ", Total Images = ", nrow(dat.train)), 
+     xlab = "# of Components",
+     ylab = "% of Variance")
+```
+<br>
+**PCA does not seem to help reducing the dimensionality of the problem. Poor correlation between features.**
+
+----
+### 2. LFDA Fisher discriminant analysis. Plotting FD1 vs FD2
+```{r, echo=FALSE, out.width=12, fig.align="center", fig.width=12}
+
+z.labeled.fewCols <- cbind(Z[,1:2], label.train)
+
+svm.model <- svm(val ~ ., 
+                 data = z.labeled.fewCols,
+                 cross = 10)
+
+fda.model <- lfda(x = dat.train[,1:1900], y = label.train$val, r = 1900, metric="plain")
+
+Z <- as.data.frame(fda.model$Z)
+#names(Z) <- c(1:1900)
+
+plot_ly(data = Z, x = Z[,1]*100000, y = Z[,2]*100000, color = label.train$val,
+        text = rownames(Z), mode="markers" )%>%
+  layout(title = "Fisher Discriminant Analyis, taking only first 1900 columns")
+
+
+```
+<br>
+**We seem to have a lead here. Linear separation between classes.**
+
+```{r, echo=FALSE, out.width=12, fig.align="center", fig.width=12}
+lowVariance <- nearZeroVar(dat.train)
+dat.train.variance <- dat.train[,-lowVariance]
+good.variance.ncol <- ncol(dat.train.variance)
+numcol.to.use <- min(good.variance.ncol, nrow(dat.train.variance))-100
+
+
+fda.model <- lfda(x = dat.train[,1:numcol.to.use], y = label.train$val, r = numcol.to.use, metric="plain")
+Z <- as.data.frame(fda.model$Z)
+
+p <- plot_ly(data = Z, x = Z[,1]*100000, y = Z[,2]*100000, color = label.train$val,
+        text = rownames(Z), mode="markers" ) %>%
+  layout(title = "Fisher Discriminant Analyis, taking first 2000 columns, filtered low variance")
+p
+
+```
+
+### 3. Trying Reduced Rank Fisher Discriminant Analysis
+```{r, echo=FALSE}
+
+dat.train.variance.labeled <- cbind(dat.train.variance[,1:numcol.to.use], label.train)
+
+
+lda.model <- lda(formula = val ~ .,
+                 data = dat.train.variance.labeled,
+                 CV = TRUE)
+
+lda.model.table <- table(dat.train.variance.labeled$val, lda.model$class)
+conCV1 <- rbind(lda.model.table[1, ]/sum(lda.model.table[1, ]), lda.model.table[2, ]/sum(lda.model.table[2, ]))
+dimnames(conCV1) <- list(Actual = c("No", "Yes"), "Predicted (cv)" = c("No","Yes"))
+print(round(conCV1, 3))
+
+```
+
+<br>
+**Running LDA over the training data does not seem to work properly. But the reduced rank dimension looks good. Can I do something over that?**
+
+### 4. SVM Plain vanilla
+Error levels of the 10-fold cross validation
+```{r, echo=FALSE}
+svm.model <- svm(val ~ ., 
+                 data = dat.train.variance.labeled,
+                 cross = 10)
+
+svm.model$accuracies
+
+```
+
+
+### 5. SVM over the FDA
+Error levels of the 10-fold cross validation
+```{r, echo=FALSE}
+z.labeled <- cbind(Z, label.train)
+
+svm.model <- svm(val ~ ., 
+                 data = z.labeled,
+                 cross = 10)
+
+svm.model$accuracies
+
+```
+
+### 6. SVM over the FDA with just 2 fisher features 
+Error levels of the 10-fold cross validation
+```{r, echo=FALSE}
+z.labeled.fewCols <- cbind(Z[,1:2], label.train)
+
+svm.model <- svm(val ~ ., 
+                 data = z.labeled.fewCols,
+                 cross = 10)
+
+svm.model$accuracies
+
+```

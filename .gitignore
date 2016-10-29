@@ -2,3 +2,7 @@ data/
 *.RData
 *.Rhistory
 .Rproj.user
+.RData
+.Rhistory
+.lib/.Rdata
+.lib/.Rhistory
