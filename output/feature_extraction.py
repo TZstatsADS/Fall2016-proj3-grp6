@@ -47,19 +47,19 @@ def write_down(alldata,filelist,ncluster,desc):
     kmeans = KMeans(n_clusters=ncluster, random_state=0).fit(alldata)
     fDict = {}
     imgDict = {}
-    for i in range(0,ncluster,1):
-        fDict[i] = 0
     for indexI in filelist:
-        imgDict[indexI] = []
+        imgDict[indexI] = None
     for img in filelist:
         kps,descs = process_image(img)
         labels = kmeans.predict(descs)
+        for i in range(0,ncluster,1):
+            fDict[i] = 0
         for clus in labels:
             fDict[clus] += 1
         sums = sum(fDict.values())
-        for i in imgDict.keys():
-            fDict[i] = imgDict[i]/sums
-        imgDict[img] = [ imgDict[i] for i in range(0,ncluster,1) ]
+        for i in fDict.keys():
+            fDict[i] = fDict[i]/sums
+        imgDict[img] = [ fDict[i] for i in range(0,ncluster,1) ]
     with open(desc,'w') as f:
         csvwriter = csv.writer(f)
         for i in filelist:
@@ -80,4 +80,7 @@ def main():
 if __name__ == '__main__':
     main()
     
+    
+
+
     
