@@ -42,6 +42,9 @@ feature <- function(img_dir, img_name, data_name=NULL){
   return(dat)
 }
 
+##### Additional feature extraction
+##### JG
+
 feature_base <- function(filename){
   library(readr)
   data <- read_csv(paste0("./data/", filename))
