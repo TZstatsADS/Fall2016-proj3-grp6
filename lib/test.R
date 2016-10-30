@@ -24,10 +24,34 @@ test <- function(fit_train, dat_test){
   return(as.numeric(pred> 0.5))
 }
 
-test.JG <- function(fit.train, dat.test){
+test.JG <- function(model, use.columns, transf.matrix, dat.test){
 
-  pred <- predict(fit.train, dat.test)
+  dat.test.columns <- dat.test[,use.columns]
   
-  return(pred)
+  cat("Dimensions of dat.test.columns: ",dim.data.frame(dat.test.columns), "\n")
+  cat("Dimensions of T: ",dim(transf.matrix), "\n")
+  
+  dat.test.z <- as.matrix(dat.test.columns) %*% transf.matrix
+  
+  cat("Number of columns in test.columns:", ncol(dat.test.columns), "\n")
+  cat("Dimensions of dat.test.z:", dim(dat.test.z), "\n")
+  
+  ## Only the two first columns
+  dat.test.z <- dat.test.z[,1:2]
+  
+  
+  pred <- predict(model, newdata = dat.test.z)
+  
+  pred.out <- as.array(as.numeric(pred))
+  
+  cat("Pred.out: ", head(pred.out), " ", typeof(pred.out), "\n")
+#  pred.out <- pred.out - 1
+#  cat("Pred.out - 1 : ", head(pred.out), " ", typeof(pred.out), "\n")
+#  pred.out <- factor(x = pred.out, levels = c(0,1))
+#  cat("Pred.out factor : ", pred.out, " ", typeof(pred.out), "\n")
+  
+  cat("DONE Prediction \n")
+  
+  return(pred.out)
 }
 

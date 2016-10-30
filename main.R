@@ -35,12 +35,22 @@ num.dog <- 1000
 label.train <- c(rep(0, num.chicken), rep(1, num.dog))
 label.train <- as.data.frame(label.train)
 names(label.train) <- c("val")
-#label.train$val <- as.factor(label.train$val)
+label.train$val <- factor(label.train$val)
 
 ### Construct visual feature ----
 source("./lib/feature.R")
 tm_feature_train <- system.time(dat.train <- feature.JG("sift_features.csv"))
 # Columns are images. Rows are SIFT features. Got to transpose.
+
+#----
+# Randomize the order of the input data
+## 1. Merge data and labels
+dat.train.labeled <- cbind(dat.train, label.train)
+## 2. Randomize
+dat.train.labeled <- dat.train.labeled[sample(1:nrow(dat.train.labeled)),]
+## 3. Separate them
+dat.train <- dat.train.labeled[,1:ncol(dat.train)]
+label.train.use <- dat.train.labeled$val
 
 save(dat.train, file="./output/feature_train.RData")
 
@@ -54,12 +64,12 @@ source("./lib/test.R")
 source("./lib/cross_validation.R")
 #depth_values <- seq(3, 11, 2)
 
-depth_values <- c(1)
-err_cv <- array(dim=c(length(depth_values), 2))
-K <- 3  # number of CV folds
-for(k in 1:length(depth_values)){
-  cat("k=", k, "\n")
-  err_cv[k,] <- cv.function(dat.train, label.train, depth_values[k], K)
+kernels <- c("linear", "polynomial", "radial basis")
+err_cv <- array(dim=c(length(kernels), 2))
+K <- 10  # number of CV folds
+for(k in 1:length(kernels)){
+  cat("k =", kernels[k], "\n")
+  err_cv[k,] <- cv.function(dat.train, label.train.use, kernels[k], K)
 }
 save(err_cv, file="./output/err_cv.RData")
 
@@ -91,4 +101,6 @@ cat("Time for constructing training features=", tm_feature_train[1], "s \n")
 #cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
 cat("Time for training model=", tm_train[1], "s \n")
 #cat("Time for making prediction=", tm_test[1], "s \n")
+
+
 

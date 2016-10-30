@@ -36,7 +36,7 @@ train <- function(dat_train, label_train, par=NULL){
   return(list(fit=fit_gbm, iter=best_iter))
 }
 
-train.JG <- function(dat.train, label.train, par=NULL){
+train.JG <- function(dat.train, label.train, kernel.value=NULL){
   
   # 1. Create FDA dimensions
   ## First filter out columns with zero and low variance.
@@ -44,18 +44,30 @@ train.JG <- function(dat.train, label.train, par=NULL){
   dat.train.variance <- dat.train[,-lowVariance]
   good.variance.ncol <- ncol(dat.train.variance)
   numcol.to.use <- ceiling(min(good.variance.ncol, nrow(dat.train.variance))*0.95)
+
+  cat("Number of colums: ",numcol.to.use, "\n")
+  cat("SumAll:", sum(dat.train.variance), "\n")
   
   ## Run FDA and extract transformed data  
-  fda.model <- lfda(x = dat.train[,1:numcol.to.use], y = label.train, r = numcol.to.use, metric="plain")
+  fda.model <- lfda(x = dat.train.variance[,1:numcol.to.use], y = label.train, r = numcol.to.use, metric="plain")
   z <- as.data.frame(fda.model$Z)
-  
+  t <- fda.model$T
+  #write.csv(t, "./output/t.csv")
+
+  cat("Dimensions of T: ", dim(t), " ", typeof(t), "\n")  
+  cat("DONE FDA \n")
   # 2. Run SVM
   ## Filter a reduced subset of the columns
   z.fewCols <- z[,1:2]
   ## Run and return
   svm.model <- svm(x = z.fewCols, 
-                   y = label.train)
-  return(svm.model)
+                   y = label.train,
+                   kernel = kernel.value)
+
+  cat("DONE SVM \n")
+  return(list(model = svm.model, 
+              use.columns = names(dat.train.variance[,1:numcol.to.use]),
+              transformation.matrix = t ))
 }
 
 

@@ -7,7 +7,7 @@
 ### ADS Spring 2016
 
 
-cv.function <- function(X.train, y.train, d, K){
+cv.function <- function(X.train, y.train, kernel, K){
   
   n <- length(y.train)
   n.fold <- floor(n/K)
@@ -15,15 +15,21 @@ cv.function <- function(X.train, y.train, d, K){
   cv.error <- rep(NA, K)
   
   for (i in 1:K){
+    cat("## Starting CV fold ", i, "## \n")
     train.data <- X.train[s != i,]
-    train.label <- y.train[s != i,]
+    train.label <- factor(y.train[s != i], levels = c("0", "1"))
     test.data <- X.train[s == i,]
-    test.label <- y.train[s == i,]
+    test.label <- factor(y.train[s == i], levels = c("0", "1"))
     
-    par <- list(depth=d)
-    fit <- train.JG(train.data, train.label, par)
-    pred <- test.JG(fit, test.data)  
-    cv.error[i] <- mean(pred != test.label)  
+    trained.model <- train.JG(train.data, train.label, kernel)
+    
+    cat("Entering Prediction Block \n")
+    pred <- test.JG(trained.model$model, trained.model$use.columns, trained.model$transformation.matrix, test.data)  
+    
+    cat("Predictions: ",head(pred), " ", typeof(pred), "\n")
+    cat("Test Labels: ",head(test.label), " ", typeof(test.label), "\n")
+    
+    cv.error[i] <- mean(pred != test.label)
     
   }			
   return(c(mean(cv.error),sd(cv.error)))
