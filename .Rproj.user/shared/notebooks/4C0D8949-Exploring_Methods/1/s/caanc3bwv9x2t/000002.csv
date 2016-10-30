@@ -1,0 +1,2 @@
+"0","fitted.dist <- fitdist(red.channel, ""norm"", ""mle"")"
+"0","plot(fitted.dist)"

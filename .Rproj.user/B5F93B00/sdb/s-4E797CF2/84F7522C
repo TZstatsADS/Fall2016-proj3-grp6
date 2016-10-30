@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#############################################################\n### Construct visual features for training/testing images ###\n#############################################################\n\n### Author: Yuting Ma\n### Project 3\n### ADS Spring 2016\n\nfeature <- function(img_dir, img_name, data_name=NULL){\n  \n  ### Construct process features for training/testing images\n  ### Sample simple feature: Extract raw pixel values os features\n  \n  ### Input: a directory that contains images ready for processing\n  ### Output: an .RData file contains processed features for the images\n  \n  ### load libraries\n  library(\"EBImage\")\n  \n  n_files <- length(list.files(img_dir))\n  \n  ### determine img dimensions\n  img0 <-  readImage(paste0(img_dir, img_name, \"_\", 1, \".jpg\"))\n  mat1 <- as.matrix(img0)\n  n_r <- nrow(img0)\n  n_c <- ncol(img0)\n  \n  ### store vectorized pixel values of images\n  dat <- array(dim=c(n_files, n_r*n_c)) \n  for(i in 1:n_files){\n    img <- readImage(paste0(img_dir, img_name, \"_\", i, \".jpg\"))\n    dat[i,] <- as.vector(img)\n  }\n  \n  ### output constructed features\n  if(!is.null(data_name)){\n    save(dat, file=paste0(\"./output/feature_\", data_name, \".RData\"))\n  }\n  return(dat)\n}\n",
+    "created" : 1477854075314.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "134753273",
+    "id" : "84F7522C",
+    "lastKnownWriteTime" : 1477871895,
+    "last_content_update" : 1477871895,
+    "path" : "C:/Users/jgaci/Google Drive/2016_Fall/Applied_Data_Science/Project03/Fall2016-proj3-grp6/lib/feature.R",
+    "project_path" : "lib/feature.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

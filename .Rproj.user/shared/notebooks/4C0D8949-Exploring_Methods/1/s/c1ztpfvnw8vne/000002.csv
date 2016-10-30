@@ -1,0 +1,11 @@
+"0","label.train <- as.data.frame(label.train)"
+"0","names(label.train) <- c(""val"")"
+"0","label.train$val <- as.factor(label.train$val)"
+"0","fda.model <- lfda(x = dat.train[,1:1900], y = label.train$val, r = 1900, metric=""plain"")"
+"0","Z <- as.data.frame(fda.model$Z)"
+"0","#names(Z) <- c(1:1900)"
+"0","plot_ly(data = Z, x = Z[,1]*100000, y = Z[,2]*100000, color = label.train$val,"
+"0","        text = rownames(Z), mode=""markers"" )%>%"
+"0","  layout(title = ""Fisher Discriminant Analyis, taking only first 1900 columns"")"
+"2","minimal value for n is 3, returning requested palette with 3 different levels
+"

@@ -1,0 +1,8 @@
+"0","# PCA"
+"0","sift.pca <- prcomp(dat.train)"
+"0","?prcomp"
+"0","plot(cumsum(sift.pca$sdev)/sum(sift.pca$sdev),"
+"0","     main =""Cumulative variance captured | PCA over SIFT features"","
+"0","     sub = paste(""Total features = "", ncol(dat.train), "", Total Images = "", nrow(dat.train)), "
+"0","     xlab = ""# of Components"","
+"0","     ylab = ""% of Variance"")"
