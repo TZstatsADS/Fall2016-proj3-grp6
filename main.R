@@ -64,24 +64,24 @@ source("./lib/test.R")
 source("./lib/cross_validation.R")
 #depth_values <- seq(3, 11, 2)
 
-kernels <- list(c("linear", 1) 
-                ,c("polynomial",2)
-                ,c("polynomial",3)
-                ,c("polynomial",5)
+params <- list(c("linear", 1, 2)
+               ,c("linear", 1, 5)
+               ,c("linear", 1, 10)
+               ,c("linear", 1, 15)
 )
-ntests <- length(kernels)
+ntests <- length(params)
 
-err_cv <- array(dim=c(length(kernels), 2))
+err_cv <- array(dim=c(length(params), 2))
 K <- 10  # number of CV folds
-for(k in 1:length(kernels)){
-  cat("== kernel =", kernels[[k]][1], "degree = ", kernels[[k]][2], "== \n")
-  err_cv[k,] <- cv.function(dat.train, label.train.use, kernels[k], K)
+for(k in 1:length(params)){
+  cat("== kernel: ", params[[k]][1], " degree: ", params[[k]][2], "dimZ: ", params[[k]][3], "== \n")
+  err_cv[k,] <- cv.function(dat.train, label.train.use, params[k], K)
 }
 save(err_cv, file="./output/err_cv.RData")
 
 # Visualize CV results
-jpeg(file = "./figs/cv_results.jpg")
-plot(x = 1:ntests, y = err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
+jpeg(file = "./figs/cv_results_zDimensions.jpg")
+plot(x = 1:ntests, y = err_cv[,1], xlab="Parameter Tuning #", ylab="CV Error",
      main="Cross Validation Error", ylim=c(0, 1))
 points(1:ntests, err_cv[,1], col="blue", pch=16)
 lines(1:ntests, err_cv[,1], col="blue")
@@ -91,11 +91,11 @@ dev.off()
 
 
 # Choose the best parameter value
-depth_best <- depth_values[which.min(err_cv[,1])]
-par_best <- list(depth=depth_best)
+#depth_best <- depth_values[which.min(err_cv[,1])]
+#par_best <- list(depth=depth_best)
 
 # train the model with the entire training set
-tm_train <- system.time(fit_train <- train(dat.train, label.train, par_best))
+#tm_train <- system.time(fit_train <- train(dat.train, label.train, par_best))
 #save(fit_train, file="./output/fit_train.RData")
 
 ### Make prediction 
@@ -103,9 +103,9 @@ tm_train <- system.time(fit_train <- train(dat.train, label.train, par_best))
 #save(pred_test, file="./output/pred_test.RData")
 
 ### Summarize Running Time
-cat("Time for constructing training features=", tm_feature_train[1], "s \n")
+#cat("Time for constructing training features=", tm_feature_train[1], "s \n")
 #cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
-cat("Time for training model=", tm_train[1], "s \n")
+#cat("Time for training model=", tm_train[1], "s \n")
 #cat("Time for making prediction=", tm_test[1], "s \n")
 
 

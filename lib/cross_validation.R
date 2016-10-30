@@ -7,7 +7,7 @@
 ### ADS Spring 2016
 
 
-cv.function <- function(X.train, y.train, kernel, K){
+cv.function <- function(X.train, y.train, params, K){
   
   n <- length(y.train)
   n.fold <- floor(n/K)
@@ -21,10 +21,10 @@ cv.function <- function(X.train, y.train, kernel, K){
     test.data <- X.train[s == i,]
     test.label <- y.train[s == i]
     
-    trained.model <- train.JG(train.data, train.label, kernel)
+    trained.model <- train.JG(train.data, train.label, params)
     
     cat("Entering Prediction Block \n")
-    pred <- test.JG(trained.model$model, trained.model$use.columns, trained.model$transformation.matrix, test.data)  
+    pred <- test.JG(trained.model, params, test.data)  
     
 #    cat("Predictions: ",head(pred), " ", typeof(pred), "\n")
 #    cat("Test Labels: ",head(test.label), " ", typeof(test.label), "\n")

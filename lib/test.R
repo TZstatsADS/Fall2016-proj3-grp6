@@ -24,8 +24,15 @@ test <- function(fit_train, dat_test){
   return(as.numeric(pred> 0.5))
 }
 
-test.JG <- function(model, use.columns, transf.matrix, dat.test){
+test.JG <- function(trained.model, params, dat.test){
 
+  # Extract relevant values
+  model <- trained.model$model
+  use.columns <- trained.model$use.columns
+  transf.matrix <- trained.model$transformation.matrix
+  dimZ <- params[[1]][3]
+  
+  
   dat.test.columns <- dat.test[,use.columns]
   
   cat("Dimensions of dat.test.columns: ",dim.data.frame(dat.test.columns), "\n")
@@ -37,7 +44,7 @@ test.JG <- function(model, use.columns, transf.matrix, dat.test){
   cat("Dimensions of dat.test.z:", dim(dat.test.z), "\n")
   
   ## Only the two first columns
-  dat.test.z <- dat.test.z[,1:10]
+  dat.test.z <- dat.test.z[,1:dimZ]
   
   
   pred <- predict(model, newdata = dat.test.z)

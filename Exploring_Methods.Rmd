@@ -1,7 +1,9 @@
 ---
 title: "Image recognition | Chicken or Dog?"
 author: "Team 6"
-output:  html_notebook
+output:
+  html_notebook: default
+  html_document: default
 ---
 
 
@@ -151,3 +153,62 @@ svm.model <- svm(val ~ .,
 svm.model$accuracies
 
 ```
+
+
+### Exploring RGB channels
+```{r, echo=FALSE}
+
+library(EBImage)
+library(fitdistrplus)
+library(mixtools)
+
+dog.file <- "dog_1000.jpg"
+chicken.file <- "chicken_0001.jpg"
+
+img.dog <- readImage(paste0("./data/images/",dog.file))
+img.chicken <- readImage(paste0("./data/images/",chicken.file))
+hist(img.chicken, main = chicken.file)
+hist(img.dog, main = dog.file)
+
+```
+
+### The red channel of chicken
+```{r}
+red.channel <- as.vector(as.array(img.chicken[,,1]))
+hist(red.channel)
+```
+
+### Fitting a Gaussian to the Red Channel
+```{r}
+fitted.dist <- fitdist(red.channel, "norm", "mle")
+plot(fitted.dist)
+```
+
+
+
+### Fitting a mix of Gaussians using the EM algorithm
+```{r}
+fitted.dist.mix <- normalmixEM2comp(red.channel, mu = c(0.25, 0.75), lambda = 0.2, sigsqrd = c(1,0.5),
+                                    maxit = 50)
+
+
+p <- plot(fitted.dist.mix, whichplots = 2)
+```
+This seems to be better
+
+```{r}
+fitted.dist.mix <- normalmixEM2comp(red.channel, mu = c(0.25, 0.75), lambda = 0.2, sigsqrd = c(1,0.5),
+                                    maxit = 100)
+
+
+p <- plot(fitted.dist.mix, whichplots = 2)
+```
+
+```{r}
+fitted.dist.mix <- normalmixEM2comp(red.channel, mu = c(0.25, 0.75), lambda = 0.2, sigsqrd = c(1,0.5),
+                                    maxit = 150)
+
+
+p <- plot(fitted.dist.mix, whichplots = 2)
+```
+
