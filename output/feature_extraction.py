@@ -56,7 +56,7 @@ def write_down(alldata,filelist,ncluster,desc):
         labels = kmeans.predict(descs)
         for clus in labels:
             fDict[clus] += 1
-        sums = sum(fDict.values)
+        sums = sum(fDict.values())
         for i in imgDict.keys():
             fDict[i] = imgDict[i]/sums
         imgDict[img] = [ imgDict[i] for i in range(0,ncluster,1) ]
