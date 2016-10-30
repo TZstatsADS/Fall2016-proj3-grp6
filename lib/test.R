@@ -37,7 +37,7 @@ test.JG <- function(model, use.columns, transf.matrix, dat.test){
   cat("Dimensions of dat.test.z:", dim(dat.test.z), "\n")
   
   ## Only the two first columns
-  dat.test.z <- dat.test.z[,1:2]
+  dat.test.z <- dat.test.z[,1:10]
   
   
   pred <- predict(model, newdata = dat.test.z)

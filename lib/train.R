@@ -60,7 +60,7 @@ train.JG <- function(dat.train, label.train, kernel.value){
   
   # 2. Run SVM
   ## Filter a reduced subset of the columns
-  z.fewCols <- z[,1:2]
+  z.fewCols <- z[,1:10]
   ## Run and return
 
   svm.model <- svm(x = z.fewCols, 

@@ -28,10 +28,10 @@ cv.function <- function(X.train, y.train, kernel, K){
     
 #    cat("Predictions: ",head(pred), " ", typeof(pred), "\n")
 #    cat("Test Labels: ",head(test.label), " ", typeof(test.label), "\n")
-    
+    pred <- pred - 1
     cv.error[i] <- mean(pred != test.label)
-    table(pred, test.label)
-    
+    print(table(pred, test.label))
+      
   }			
   return(c(mean(cv.error),sd(cv.error)))
   
