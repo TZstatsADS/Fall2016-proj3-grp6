@@ -167,6 +167,8 @@ chicken.file <- "chicken_0001.jpg"
 
 img.dog <- readImage(paste0("./data/images/",dog.file))
 img.chicken <- readImage(paste0("./data/images/",chicken.file))
+
+
 hist(img.chicken, main = chicken.file)
 hist(img.dog, main = dog.file)
 

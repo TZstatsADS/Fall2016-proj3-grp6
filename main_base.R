@@ -22,8 +22,8 @@ label_train <- c(rep(0, num_chicken), rep(1, num_dog))
 
 ### Construct visual feature ----
 source("./lib/feature.R")
+tm_feature_train_RGB <- system.time(dat_train_RGB <- feature_RGB("./data/images/", "RGB"))
 tm_feature_train <- system.time(dat_train <- feature_base("sift_features.csv"))
-# Columns are images. Rows are SIFT features. Got to transpose.
 
 save(dat_train, file="./output/feature_train.RData")
 
