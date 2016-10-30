@@ -64,11 +64,17 @@ source("./lib/test.R")
 source("./lib/cross_validation.R")
 #depth_values <- seq(3, 11, 2)
 
-kernels <- c("linear", "polynomial", "radial basis")
+kernels <- list(c("linear", 1), 
+                c("polynomial",2),
+                c("polynomial",3),
+                c("polynomial",5)
+)
+degrees <- c(2, 3, 5)
+
 err_cv <- array(dim=c(length(kernels), 2))
 K <- 10  # number of CV folds
 for(k in 1:length(kernels)){
-  cat("k =", kernels[k], "\n")
+  cat("== kernel =", kernels[[k]][1], "degree = ", kernels[[k]][2], "== \n")
   err_cv[k,] <- cv.function(dat.train, label.train.use, kernels[k], K)
 }
 save(err_cv, file="./output/err_cv.RData")

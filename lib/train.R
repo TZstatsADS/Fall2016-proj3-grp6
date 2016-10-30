@@ -36,7 +36,7 @@ train <- function(dat_train, label_train, par=NULL){
   return(list(fit=fit_gbm, iter=best_iter))
 }
 
-train.JG <- function(dat.train, label.train, kernel.value=NULL){
+train.JG <- function(dat.train, label.train, kernel.value){
   
   # 1. Create FDA dimensions
   ## First filter out columns with zero and low variance.
@@ -56,13 +56,17 @@ train.JG <- function(dat.train, label.train, kernel.value=NULL){
 
   cat("Dimensions of T: ", dim(t), " ", typeof(t), "\n")  
   cat("DONE FDA \n")
+  
+  
   # 2. Run SVM
   ## Filter a reduced subset of the columns
   z.fewCols <- z[,1:2]
   ## Run and return
+
   svm.model <- svm(x = z.fewCols, 
                    y = label.train,
-                   kernel = kernel.value)
+                   kernel = kernel.value[[1]][1],
+                   degree = kernel.value[[1]][2])
 
   cat("DONE SVM \n")
   return(list(model = svm.model, 

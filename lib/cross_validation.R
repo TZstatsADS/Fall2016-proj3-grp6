@@ -17,19 +17,20 @@ cv.function <- function(X.train, y.train, kernel, K){
   for (i in 1:K){
     cat("## Starting CV fold ", i, "## \n")
     train.data <- X.train[s != i,]
-    train.label <- factor(y.train[s != i], levels = c("0", "1"))
+    train.label <- y.train[s != i]
     test.data <- X.train[s == i,]
-    test.label <- factor(y.train[s == i], levels = c("0", "1"))
+    test.label <- y.train[s == i]
     
     trained.model <- train.JG(train.data, train.label, kernel)
     
     cat("Entering Prediction Block \n")
     pred <- test.JG(trained.model$model, trained.model$use.columns, trained.model$transformation.matrix, test.data)  
     
-    cat("Predictions: ",head(pred), " ", typeof(pred), "\n")
-    cat("Test Labels: ",head(test.label), " ", typeof(test.label), "\n")
+#    cat("Predictions: ",head(pred), " ", typeof(pred), "\n")
+#    cat("Test Labels: ",head(test.label), " ", typeof(test.label), "\n")
     
     cv.error[i] <- mean(pred != test.label)
+    table(pred, test.label)
     
   }			
   return(c(mean(cv.error),sd(cv.error)))
