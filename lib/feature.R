@@ -66,14 +66,14 @@ feature_RGB <- function(img_dir, data_name){
     img.name <- list.of.images[i]
     image.path <- paste0(img_dir, img.name)
     img <- readImage(image.path)
-    cat("i=", i, ", Image: ", image.path, "\n")
+#    cat("i=", i, ", Image: ", image.path, "\n")
     
     height <- nrow(img)
     width <-  ncol(img) 
 
-    cat("Original:",width, ", ", height, "\n" )
+#    cat("Original:",width, ", ", height, "\n" )
 
-    if(width <= height){
+    if(width > height){
       img <- resize(x = img, h = 128)    
     } else{
       img <- resize(x = img, w = 128)    
@@ -82,20 +82,26 @@ feature_RGB <- function(img_dir, data_name){
     height <- nrow(img)
     width <-  ncol(img) 
     
-    cat("Resized:",width, ", ", height, "\n" )
+#    cat("Resized:",width, ", ", height, "\n" )
     
     red.channel <- as.vector(as.array(img[,,1]))
+    red.channel <- red.channel[red.channel <= 0.95]
     green.channel <- as.vector(as.array(img[,,2]))
+    green.channel <- green.channel[green.channel <= 0.95]
     blue.channel <- as.vector(as.array(img[,,3]))
+    blue.channel <- blue.channel[blue.channel <= 0.95]
+    
+    
+    tryCatch({
     
     fitted.dist.mix.r <- normalmixEM2comp(red.channel, mu = c(0.25, 0.75), lambda = 0.2, sigsqrd = c(1,0.5),
-                                        maxit = 100)
+                                                   maxit = 100, verb = FALSE)
     
     fitted.dist.mix.g <- normalmixEM2comp(green.channel, mu = c(0.25, 0.75), lambda = 0.2, sigsqrd = c(1,0.5),
-                                          maxit = 100)
+                                          maxit = 100, verb = FALSE)
     
     fitted.dist.mix.b <- normalmixEM2comp(blue.channel, mu = c(0.25, 0.75), lambda = 0.2, sigsqrd = c(1,0.5),
-                                          maxit = 100)
+                                          maxit = 100, verb = FALSE)
     
     dat[i,1] <- fitted.dist.mix.r$mu[1]
     dat[i,2] <- fitted.dist.mix.r$mu[2]
@@ -110,8 +116,16 @@ feature_RGB <- function(img_dir, data_name){
     dat[i,11] <- fitted.dist.mix.b$sigma[1]
     dat[i,12] <- fitted.dist.mix.b$sigma[2]
     
+    }, 
+    warning = function(w){
+      return(NULL)
+    },
+    error = function(e){
+      return(NULL)
+    },
+    finally = {}
+    )
     
-
     cat(img.name, " value: ", dat[i,], "\n")
   }
   
