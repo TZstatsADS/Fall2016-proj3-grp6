@@ -9,6 +9,7 @@
 
 train <- function(dat_train, label_train, par=NULL){
   
+  cat("## Entering training block \n")
   ### Train a Gradient Boosting Model (GBM) using processed features from training images
   
   ### Input: 
@@ -23,7 +24,7 @@ train <- function(dat_train, label_train, par=NULL){
   if(is.null(par)){
     depth <- 3
   } else {
-    depth <- par$depth
+    depth <- par
   }
   fit_gbm <- gbm.fit(x=dat_train, y=label_train,
                      n.trees= 2000,

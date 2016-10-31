@@ -8,6 +8,7 @@
 
 ### Specify directories
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+library(parallel)
 
 img_train_dir <- "./data/images/"
 #img_test_dir <- "./data/zipcode_test/"
@@ -25,36 +26,54 @@ source("./lib/feature.R")
 tm_feature_train_RGB <- system.time(dat_train_RGB <- feature_RGB("./data/images/", "RGB"))
 tm_feature_train <- system.time(dat_train <- feature_base("sift_features.csv"))
 
+## Merge both training data
+dat_train <- cbind(dat_train, dat_train_RGB)
 save(dat_train, file="./output/feature_train.RData")
 
 ### Train a classification model with training images
 source("./lib/train.R")
 source("./lib/test.R")
 
-
 ### Model selection with cross-validation ----
 # Choosing between different values of interaction depth for GBM
 source("./lib/cross_validation.R")
 #depth_values <- seq(3, 11, 2)
-depth_values <- c(1)
 
+
+depth_values <- c(1,2)
 err_cv <- array(dim=c(length(depth_values), 2))
 K <- 5  # number of CV folds
+
+cl <- makeCluster(4)
+cv.errors <- clusterApply(cl, depth_values, function(x){
+  cat("Depth Value:", x, "\n")
+  cv.error <- cv.function(dat_train, label_train, depth_values[k], K)
+  return(cv.error)
+} )
+
+
 for(k in 1:length(depth_values)){
+
   cat("k=", k, "\n")
-  err_cv[k,] <- cv.function(dat_train, label_train, depth_values[k], K)
+  fold.time <- system.time(
+    err_cv[k,] <- cv.function(dat_train, label_train, depth_values[k], K)
+    )
+  cat("Fold Time: ", fold.time, "\n")
 }
 save(err_cv, file="./output/err_cv.RData")
 
+err_cv_12 <- err_cv
+
 # Visualize CV results
-jpeg(file = "./figs/cv_results.jpg")
+#jpeg(file = "./figs/cv_results.jpg")
 plot(depth_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
-     main="Cross Validation Error", type="n", ylim=c(0, 0.5))
+     main="Cross Validation Error", type="n", ylim=c(0, 0.5), xaxt="n")
+axis(1, at = c(1,2,3, 4, 5))
 points(depth_values, err_cv[,1], col="blue", pch=16)
 lines(depth_values, err_cv[,1], col="blue")
 arrows(depth_values, err_cv[,1]-err_cv[,2],depth_values, err_cv[,1]+err_cv[,2], 
       length=0.1, angle=90, code=3)
-dev.off()
+#dev.off()
 
 
 # Choose the best parameter value

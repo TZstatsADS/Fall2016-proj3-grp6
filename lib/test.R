@@ -8,6 +8,7 @@
 
 test <- function(fit_train, dat_test){
   
+  cat("Entering Prediction Block \n")
   ### Fit the classfication model with testing data
   
   ### Input: 

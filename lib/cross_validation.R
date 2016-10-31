@@ -7,7 +7,7 @@
 ### ADS Spring 2016
 
 
-cv.function <- function(X.train, y.train, params, K){
+cv.function.JG <- function(X.train, y.train, params, K){
   
   n <- length(y.train)
   n.fold <- floor(n/K)
@@ -36,3 +36,42 @@ cv.function <- function(X.train, y.train, params, K){
   return(c(mean(cv.error),sd(cv.error)))
   
 }
+
+cv.function <- function(X.train, y.train, params, K){
+  
+  n <- length(y.train)
+  n.fold <- floor(n/K)
+  s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)))  
+  cv.error <- rep(NA, K)
+  
+  for (i in 1:K){
+    cat("## Starting CV fold ", i, "## \n")
+    train.data <- X.train[s != i,]
+    train.label <- y.train[s != i]
+    test.data <- X.train[s == i,]
+    test.label <- y.train[s == i]
+    
+    
+    time.train <- system.time(
+      trained.model <- train(train.data, train.label, params)
+      )
+    cat("Training Time: ", time.train, "\n")
+    
+    time.pred <- system.time(
+      pred <- test(trained.model, test.data)
+      )
+    
+    cat("Prediction Time: ", time.pred, "\n")
+    #    cat("Predictions: ",head(pred), " ", typeof(pred), "\n")
+    #    cat("Test Labels: ",head(test.label), " ", typeof(test.label), "\n")
+
+    cv.error[i] <- mean(pred != test.label)
+    print(table(pred, test.label))
+    
+  }			
+  return(c(mean(cv.error),sd(cv.error)))
+  
+}
+
+
+
