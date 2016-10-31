@@ -30,45 +30,28 @@ tm_feature_train <- system.time(dat_train <- feature_base("sift_features.csv"))
 dat_train <- cbind(dat_train, dat_train_RGB)
 save(dat_train, file="./output/feature_train.RData")
 
-### Train a classification model with training images
 source("./lib/train.R")
 source("./lib/test.R")
-
-### Model selection with cross-validation ----
-# Choosing between different values of interaction depth for GBM
 source("./lib/cross_validation.R")
-#depth_values <- seq(3, 11, 2)
-
-
-depth_values <- c(1,2)
-err_cv <- array(dim=c(length(depth_values), 2))
+depth_values <- c(1,2,3,4) # depth of trees in boosted decision trees
 K <- 5  # number of CV folds
-
-cl <- makeCluster(4)
-cv.errors <- clusterApply(cl, depth_values, function(x){
-  cat("Depth Value:", x, "\n")
-  cv.error <- cv.function(dat_train, label_train, depth_values[k], K)
-  return(cv.error)
+# Loop cross validation over different depths of trees
+cv.errors <- lapply(depth_values, function(x){
+  cv.function(dat_train, label_train, x, K)
+  #cv.error <- cv.function(dat_train, label_train, x, K)
+  #return(cv.error)
 } )
 
+cv.errors.mat <- matrix(unlist(cv.errors), ncol = 2, byrow = TRUE)
 
-for(k in 1:length(depth_values)){
-
-  cat("k=", k, "\n")
-  fold.time <- system.time(
-    err_cv[k,] <- cv.function(dat_train, label_train, depth_values[k], K)
-    )
-  cat("Fold Time: ", fold.time, "\n")
-}
-save(err_cv, file="./output/err_cv.RData")
-
-err_cv_12 <- err_cv
+save(cv.errors.mat, file="./output/err_cv.RData")
 
 # Visualize CV results
-#jpeg(file = "./figs/cv_results.jpg")
+#jpeg(file = "./figs/cv_results_SIFT+RGB.jpg")
 plot(depth_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
-     main="Cross Validation Error", type="n", ylim=c(0, 0.5), xaxt="n")
-axis(1, at = c(1,2,3, 4, 5))
+     main="Cross Validation Error | Multiple depths Base Model | SIFT+RGB features ", 
+     type="n", ylim=c(0, 0.5), xaxt="n")
+axis(1, at = depth_values)
 points(depth_values, err_cv[,1], col="blue", pch=16)
 lines(depth_values, err_cv[,1], col="blue")
 arrows(depth_values, err_cv[,1]-err_cv[,2],depth_values, err_cv[,1]+err_cv[,2], 

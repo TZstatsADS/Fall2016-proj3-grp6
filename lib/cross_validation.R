@@ -38,7 +38,7 @@ cv.function.JG <- function(X.train, y.train, params, K){
 }
 
 cv.function <- function(X.train, y.train, params, K){
-  
+  cat("Depth Value:", params, "\n")
   n <- length(y.train)
   n.fold <- floor(n/K)
   s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)))  
