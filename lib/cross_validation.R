@@ -39,13 +39,15 @@ cv.function.JG <- function(X.train, y.train, params, K){
 }
 
 cv.function <- function(X.train, y.train, params, K){
-  cat("Depth Value:", params, "\n")
+  cat(params, "\n")
+  cat("Parameters:", params, "\n")
   n <- length(y.train)
   n.fold <- floor(n/K)
   s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)))  
   cv.error <- rep(NA, K)
   
   time.predAvg <- 0
+  time.trainAvg <- 0
   for (i in 1:K){
     cat("## Starting CV fold ", i, "## \n")
     train.data <- X.train[s != i,]
@@ -63,7 +65,8 @@ cv.function <- function(X.train, y.train, params, K){
       pred <- test(trained.model, test.data)
       )
     
-    time.predAvg <- time.predAvg + time.pred/K
+    time.predAvg <- time.predAvg + time.pred[1]/K
+    time.trainAvg <- time.trainAvg + time.train[1]/K
     
     cat("Prediction Time: ", time.pred, "\n")
     #    cat("Predictions: ",head(pred), " ", typeof(pred), "\n")
@@ -73,8 +76,10 @@ cv.function <- function(X.train, y.train, params, K){
     print(table(pred, test.label))
     
   }			
-  time.predAvg.perPic <- time.predAvg / nrow(test.label)
-  return(c(mean(cv.error),sd(cv.error), time.predAvg.perPic))
+  time.predAvg.perPic <- time.predAvg / length(test.label)
+  cat("Avg Training Time:", time.trainAvg, "\n")
+  cat("Avg Prediction Time / Pic:", time.predAvg.perPic, "\n")
+  return(c(mean(cv.error),sd(cv.error),time.trainAvg, time.predAvg.perPic))
   
 }
 

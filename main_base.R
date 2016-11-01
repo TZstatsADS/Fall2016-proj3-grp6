@@ -47,29 +47,35 @@ plot.errors <- function(err_cv, depth_values, txt){
   #dev.off()
 }
 
-tryGBM <- function(data.train, label.train, depth_values, K, suffix){
-  cv.errors <- lapply(depth_values, function(x){
+tryGBM <- function(data.train, label.train, params, K, suffix){
+  cv.errors <- apply(params, 1, function(x){
     cv.function(data.train, label.train, x, K)
   })
-  cv.errors.mat <- matrix(unlist(cv.errors), ncol = 3, byrow = TRUE)
+  cv.errors.mat <- matrix(unlist(cv.errors), ncol = 4, byrow = TRUE)
   save(cv.errors.mat, file=paste0("./output/err_cv_", suffix, ".RData"))
 #  plot.errors(cv.errors.mat, depth_values, suffix)
   return(cv.errors.mat)
 }
 
 dat_train <- feature_base("sift_features.csv")
-depth_values <- c(1,2,3) # depth of trees in boosted decision trees
+depth_values <- data.frame(depth=c(1,2,3), numtrees=c(2000,2000,2000)) # depth of trees in boosted decision trees
 K <- 5  # number of CV folds
 suffix <- "GBM_base"
 GBM.base <- tryGBM(dat_train, label_train, depth_values, K, suffix)
 
 dat_train <- cbind(dat_train, dat_train_RGB)
-depth_values <- c(1,2,3) # depth of trees in boosted decision trees
+depth_values <- data.frame(depth=c(1,2,3), numtrees=c(2000,2000,2000)) # depth of trees in boosted decision trees
 K <- 5  # number of CV folds
 suffix <- "GBM_base_RGB"
 GBM.base.RGB <- tryGBM(dat_train, label_train, depth_values, K, suffix)
 
+#dat_train <- cbind(dat_train, dat_train_RGB)
+GBM.param <- data.frame(depth=c(3,4,4), numtrees=c(500, 500, 1000)) # depth of trees in boosted decision trees
+K <- 5  # number of CV folds
+suffix <- "GBM_base_RGB_1"
+GBM.base.RGB.1 <- tryGBM(dat_train, label_train, GBM.param, K, suffix)
 
+GBM.base.RGB.1
 
 #plot.errors(GBM.base, 1, "hola")
 

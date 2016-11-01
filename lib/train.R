@@ -20,16 +20,19 @@ train <- function(dat_train, label_train, par=NULL){
   ### load libraries
   library("gbm")
   
-  ### Train with gradient boosting model
+  
+  
+    ### Train with gradient boosting model
   if(is.null(par)){
     depth <- 3
   } else {
     depth <- par
   }
+  
   fit_gbm <- gbm.fit(x=dat_train, y=label_train,
-                     n.trees= 2000,
+                     n.trees= par[2],
                      distribution="bernoulli",
-                     interaction.depth=depth, 
+                     interaction.depth=par[1], 
                      bag.fraction = 0.5,
                      verbose=FALSE)
   best_iter <- gbm.perf(fit_gbm, method="OOB")
