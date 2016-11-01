@@ -8,7 +8,7 @@
 
 ### Specify directories
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-library(parallel)
+library(caret)
 
 img_train_dir <- "./data/images/"
 #img_test_dir <- "./data/zipcode_test/"
@@ -25,6 +25,7 @@ label_train <- c(rep(0, num_chicken), rep(1, num_dog))
 source("./lib/feature.R")
 tm_feature_train_RGB <- system.time(dat_train_RGB <- feature_RGB("./data/images/", "RGB"))
 tm_feature_train <- system.time(dat_train <- feature_base("sift_features.csv"))
+dat_train_RGB[is.na(dat_train_RGB)] <- 0
 
 ## Merge both training data
 #dat_train <- cbind(dat_train, dat_train_RGB)
@@ -34,15 +35,16 @@ source("./lib/train.R")
 source("./lib/test.R")
 source("./lib/cross_validation.R")
 
-plot.errors <- function(err_cv, depth_values, txt){
+plot.errors <- function(err_cv, params, txt){
   #jpeg(file = "./figs/cv_results_SIFT+RGB.jpg")
-  plot(depth_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
+  x.axis <- 1:nrow(params)
+  plot(x.axis, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
        main=paste0("Cross Validation Error | Multiple depths Base Model | ", txt), 
        type="n", ylim=c(0, 0.5), xaxt="n")
-  axis(1, at = depth_values)
-  points(depth_values, err_cv[,1], col="blue", pch=16)
-  lines(depth_values, err_cv[,1], col="blue")
-  arrows(depth_values, err_cv[,1]-err_cv[,2],depth_values, err_cv[,1]+err_cv[,2], 
+  axis(1, at = x.axis)
+  points(x.axis, err_cv[,1], col="blue", pch=16)
+  lines(x.axis, err_cv[,1], col="blue")
+  arrows(x.axis, err_cv[,1]-err_cv[,2],x.axis, err_cv[,1]+err_cv[,2], 
          length=0.1, angle=90, code=3)
   #dev.off()
 }
@@ -58,26 +60,34 @@ tryGBM <- function(data.train, label.train, params, K, suffix){
 }
 
 dat_train <- feature_base("sift_features.csv")
-depth_values <- data.frame(depth=c(1,2,3), numtrees=c(2000,2000,2000)) # depth of trees in boosted decision trees
-K <- 5  # number of CV folds
-suffix <- "GBM_base"
-GBM.base <- tryGBM(dat_train, label_train, depth_values, K, suffix)
+depth_values <- data.frame(depth=c(1,2,3), numtrees=c(100,100,100), pca=c(1,1,1)) # depth of trees in boosted decision trees
+K <- 2  # number of CV folds
+suffix <- "GBM_base_test"
+GBM.base.test <- tryGBM(dat_train, label_train, depth_values, K, suffix)
+plot.errors(GBM.base.test, depth_values, "Testing PCA")
+
 
 dat_train <- cbind(dat_train, dat_train_RGB)
-depth_values <- data.frame(depth=c(1,2,3), numtrees=c(2000,2000,2000)) # depth of trees in boosted decision trees
+depth_values <- data.frame(depth=c(1,2,3), numtrees=c(2000,2000,2000), pca=c(1,1,1)) # depth of trees in boosted decision trees
 K <- 5  # number of CV folds
 suffix <- "GBM_base_RGB"
 GBM.base.RGB <- tryGBM(dat_train, label_train, depth_values, K, suffix)
 
-#dat_train <- cbind(dat_train, dat_train_RGB)
 GBM.param <- data.frame(depth=c(3,4,4), numtrees=c(500, 500, 1000)) # depth of trees in boosted decision trees
 K <- 5  # number of CV folds
 suffix <- "GBM_base_RGB_1"
 GBM.base.RGB.1 <- tryGBM(dat_train, label_train, GBM.param, K, suffix)
+plot.errors(GBM.base.RGB.1, GBM.param, "GBM_base_RGB_1")
 
-GBM.base.RGB.1
 
-#plot.errors(GBM.base, 1, "hola")
+GBM.param <- data.frame(depth=c(3,3,3), numtrees=c(1000, 2000, 2500), pca=c(1,1,1)) # depth of trees in boosted decision trees
+K <- 5  # number of CV folds
+suffix <- "GBM_base_RGB_PCA500"
+GBM.base.RGB.PCA <- tryGBM(dat_train, label_train, GBM.param, K, suffix)
+plot.errors(GBM.base.RGB.1, GBM.param, "GBM_base_RGB_PCA500")
+
+
+
 
 # Choose the best parameter value
 depth_best <- depth_values[which.min(err_cv[,1])]

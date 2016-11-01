@@ -29,6 +29,20 @@ train <- function(dat_train, label_train, par=NULL){
     depth <- par
   }
   
+  if(par[3] == 1){
+    cat("Doing PCA \n")
+    pca.data <- prcomp(dat_train)
+    cat("Rotation Matrix Dimensions:", dim(pca.data$rotation), "\n ")
+    #dat_train <- dat_train %*% pca.data$rotation
+    dat_train <- predict(pca.data)
+    cat("Dimensions ", dim(dat_train), "\n")
+    cat("Subsetting columns \n")
+    dat_train <- dat_train[,1:500] # Arbitrary selection
+  }
+  
+  cat("Dimensions ", dim(dat_train), "\n")
+  
+  cat("Starting GBM \n")
   fit_gbm <- gbm.fit(x=dat_train, y=label_train,
                      n.trees= par[2],
                      distribution="bernoulli",
@@ -37,7 +51,7 @@ train <- function(dat_train, label_train, par=NULL){
                      verbose=FALSE)
   best_iter <- gbm.perf(fit_gbm, method="OOB")
 
-  return(list(fit=fit_gbm, iter=best_iter))
+  return(list(fit=fit_gbm, iter=best_iter, pca.data=pca.data))
 }
 
 train.JG <- function(dat.train, label.train, params){

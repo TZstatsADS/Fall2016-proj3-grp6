@@ -19,6 +19,11 @@ test <- function(fit_train, dat_test){
   ### load libraries
   library("gbm")
   
+  if(!is.null(fit_train$pca.data)){
+    dat_test <- dat_test %*% fit_train$pca.data$rotation
+    dat_test <- dat_test[,1:500]
+  }
+  
   pred <- predict(fit_train$fit, newdata=dat_test, 
                   n.trees=fit_train$iter, type="response")
   

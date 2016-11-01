@@ -39,7 +39,6 @@ cv.function.JG <- function(X.train, y.train, params, K){
 }
 
 cv.function <- function(X.train, y.train, params, K){
-  cat(params, "\n")
   cat("Parameters:", params, "\n")
   n <- length(y.train)
   n.fold <- floor(n/K)
@@ -54,7 +53,6 @@ cv.function <- function(X.train, y.train, params, K){
     train.label <- y.train[s != i]
     test.data <- X.train[s == i,]
     test.label <- y.train[s == i]
-    
     
     time.train <- system.time(
       trained.model <- train(train.data, train.label, params)
