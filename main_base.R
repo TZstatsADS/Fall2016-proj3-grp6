@@ -83,9 +83,10 @@ plot.errors(GBM.base.RGB.1, GBM.param, "GBM_base_RGB_1")
 GBM.param <- data.frame(depth=c(3,3,3), numtrees=c(1000, 2000, 2500), pca=c(1,1,1)) # depth of trees in boosted decision trees
 K <- 5  # number of CV folds
 suffix <- "GBM_base_RGB_PCA500"
-GBM.base.RGB.PCA <- tryGBM(dat_train, label_train, GBM.param, K, suffix)
+GBM.base.RGB.PCA <- tryGBM(dat_train, label_train, GBM.param[2:3,], K, suffix)
 plot.errors(GBM.base.RGB.1, GBM.param, "GBM_base_RGB_PCA500")
 
+GBM.base.RGB.PCA
 
 
 

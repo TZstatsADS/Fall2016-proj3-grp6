@@ -7,5 +7,4 @@ data/
 .Rhistory
 .lib/.Rdata
 .lib/.Rhistory
-output/**
 .Rproj.user/**
