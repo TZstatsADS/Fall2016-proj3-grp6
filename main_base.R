@@ -27,37 +27,51 @@ tm_feature_train_RGB <- system.time(dat_train_RGB <- feature_RGB("./data/images/
 tm_feature_train <- system.time(dat_train <- feature_base("sift_features.csv"))
 
 ## Merge both training data
-dat_train <- cbind(dat_train, dat_train_RGB)
+#dat_train <- cbind(dat_train, dat_train_RGB)
 save(dat_train, file="./output/feature_train.RData")
 
 source("./lib/train.R")
 source("./lib/test.R")
 source("./lib/cross_validation.R")
-depth_values <- c(1,2,3,4) # depth of trees in boosted decision trees
+
+plot.errors <- function(err_cv, depth_values, txt){
+  #jpeg(file = "./figs/cv_results_SIFT+RGB.jpg")
+  plot(depth_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
+       main=paste0("Cross Validation Error | Multiple depths Base Model | ", txt), 
+       type="n", ylim=c(0, 0.5), xaxt="n")
+  axis(1, at = depth_values)
+  points(depth_values, err_cv[,1], col="blue", pch=16)
+  lines(depth_values, err_cv[,1], col="blue")
+  arrows(depth_values, err_cv[,1]-err_cv[,2],depth_values, err_cv[,1]+err_cv[,2], 
+         length=0.1, angle=90, code=3)
+  #dev.off()
+}
+
+tryGBM <- function(data.train, label.train, depth_values, K, suffix){
+  cv.errors <- lapply(depth_values, function(x){
+    cv.function(data.train, label.train, x, K)
+  })
+  cv.errors.mat <- matrix(unlist(cv.errors), ncol = 3, byrow = TRUE)
+  save(cv.errors.mat, file=paste0("./output/err_cv_", suffix, ".RData"))
+#  plot.errors(cv.errors.mat, depth_values, suffix)
+  return(cv.errors.mat)
+}
+
+dat_train <- feature_base("sift_features.csv")
+depth_values <- c(1,2,3) # depth of trees in boosted decision trees
 K <- 5  # number of CV folds
-# Loop cross validation over different depths of trees
-cv.errors <- lapply(depth_values, function(x){
-  cv.function(dat_train, label_train, x, K)
-  #cv.error <- cv.function(dat_train, label_train, x, K)
-  #return(cv.error)
-} )
+suffix <- "GBM_base"
+GBM.base <- tryGBM(dat_train, label_train, depth_values, K, suffix)
 
-cv.errors.mat <- matrix(unlist(cv.errors), ncol = 2, byrow = TRUE)
+dat_train <- cbind(dat_train, dat_train_RGB)
+depth_values <- c(1,2,3) # depth of trees in boosted decision trees
+K <- 5  # number of CV folds
+suffix <- "GBM_base_RGB"
+GBM.base.RGB <- tryGBM(dat_train, label_train, depth_values, K, suffix)
 
-save(cv.errors.mat, file="./output/err_cv.RData")
 
-# Visualize CV results
-#jpeg(file = "./figs/cv_results_SIFT+RGB.jpg")
-plot(depth_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
-     main="Cross Validation Error | Multiple depths Base Model | SIFT+RGB features ", 
-     type="n", ylim=c(0, 0.5), xaxt="n")
-axis(1, at = depth_values)
-points(depth_values, err_cv[,1], col="blue", pch=16)
-lines(depth_values, err_cv[,1], col="blue")
-arrows(depth_values, err_cv[,1]-err_cv[,2],depth_values, err_cv[,1]+err_cv[,2], 
-      length=0.1, angle=90, code=3)
-#dev.off()
 
+#plot.errors(GBM.base, 1, "hola")
 
 # Choose the best parameter value
 depth_best <- depth_values[which.min(err_cv[,1])]

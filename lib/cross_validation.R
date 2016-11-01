@@ -24,14 +24,15 @@ cv.function.JG <- function(X.train, y.train, params, K){
     trained.model <- train.JG(train.data, train.label, params)
     
     cat("Entering Prediction Block \n")
-    pred <- test.JG(trained.model, params, test.data)  
     
-#    cat("Predictions: ",head(pred), " ", typeof(pred), "\n")
-#    cat("Test Labels: ",head(test.label), " ", typeof(test.label), "\n")
+    pred.time <- proc.time()
+    pred <- test.JG(trained.model, params, test.data)  
+    pred.time <- proc.time() - pred.time
+
     pred <- pred - 1
     cv.error[i] <- mean(pred != test.label)
     print(table(pred, test.label))
-      
+     
   }			
   return(c(mean(cv.error),sd(cv.error)))
   
@@ -44,6 +45,7 @@ cv.function <- function(X.train, y.train, params, K){
   s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)))  
   cv.error <- rep(NA, K)
   
+  time.predAvg <- 0
   for (i in 1:K){
     cat("## Starting CV fold ", i, "## \n")
     train.data <- X.train[s != i,]
@@ -61,6 +63,8 @@ cv.function <- function(X.train, y.train, params, K){
       pred <- test(trained.model, test.data)
       )
     
+    time.predAvg <- time.predAvg + time.pred/K
+    
     cat("Prediction Time: ", time.pred, "\n")
     #    cat("Predictions: ",head(pred), " ", typeof(pred), "\n")
     #    cat("Test Labels: ",head(test.label), " ", typeof(test.label), "\n")
@@ -69,7 +73,8 @@ cv.function <- function(X.train, y.train, params, K){
     print(table(pred, test.label))
     
   }			
-  return(c(mean(cv.error),sd(cv.error)))
+  time.predAvg.perPic <- time.predAvg / nrow(test.label)
+  return(c(mean(cv.error),sd(cv.error), time.predAvg.perPic))
   
 }
 

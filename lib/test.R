@@ -36,13 +36,13 @@ test.JG <- function(trained.model, params, dat.test){
   
   dat.test.columns <- dat.test[,use.columns]
   
-  cat("Dimensions of dat.test.columns: ",dim.data.frame(dat.test.columns), "\n")
-  cat("Dimensions of T: ",dim(transf.matrix), "\n")
+#  cat("Dimensions of dat.test.columns: ",dim.data.frame(dat.test.columns), "\n")
+#  cat("Dimensions of T: ",dim(transf.matrix), "\n")
   
   dat.test.z <- as.matrix(dat.test.columns) %*% transf.matrix
   
-  cat("Number of columns in test.columns:", ncol(dat.test.columns), "\n")
-  cat("Dimensions of dat.test.z:", dim(dat.test.z), "\n")
+#  cat("Number of columns in test.columns:", ncol(dat.test.columns), "\n")
+#  cat("Dimensions of dat.test.z:", dim(dat.test.z), "\n")
   
   ## Only the two first columns
   dat.test.z <- dat.test.z[,1:dimZ]
