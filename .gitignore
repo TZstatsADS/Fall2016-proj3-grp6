@@ -1,3 +1,9 @@
-Data/**
-/.Rproj.user/**
+data/
 .Rhistory
+*.Rhistory
+.Rproj.user
+.RData
+.Rhistory
+.lib/.Rdata
+.lib/.Rhistory
+.Rproj.user/**
