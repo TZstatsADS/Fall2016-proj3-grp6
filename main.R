@@ -9,15 +9,11 @@
 setwd('C:/Users/celia/Desktop/Project 3')
 
 #load libraries
-source("https://bioconductor.org/biocLite.R")
-biocLite("EBImage")
-install.packages('base')
-install.packages('data.table')
-install.packages('gbm')
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("EBImage")
 library(EBImage) # not available (for R version 3.3.1)
 library(base)
 library(data.table) # for fread
-library(gbm)
 
 
 img_train_dir <- "./data/zipcode_train/"
@@ -41,17 +37,17 @@ source("./lib/feature.R")
 # for train feature
 tm_feature_train_base=system.time(dat_train_base <- feature_base('sift_features.csv'));dim(dat_train_base)
 # feature RGB
-tm_feature_train_RGB.dog=system.time(dat_train_RGB.dog <- feature_RGB(img_train_dir, "dog"));dim(dat_train_RGB.dog);tm_feature_train_RGB.dog
-tm_feature_train_RGB.chic=system.time(dat_train_RGB.chic <- feature_RGB(img_train_dir, "chicken"));dim(dat_train_RGB.chic);tm_feature_train_RGB.chic
-#tm_feature_train_RGB=system.time(dat_train_RGB <- feature_RGB(img_train_dir, c('chicken','dog')));dim(dat_train_RGB);tm_feature_train_RGB
-dat_train_RGB=rbind(dat_train_RGB.chic,dat_train_RGB.dog)
+tm_feature_train_RGB=system.time(dat_train_RGB <- feature_RGB(img_train_dir, c('chicken','dog')));dim(dat_train_RGB);tm_feature_train_RGB
+#ntm_feature_train_HSV=system.time(dat_train_HSV <- feature_HSV(img_train_dir, c('chicken','dog')));dim(dat_train_HSV);tm_feature_train_HSV
+# get rid of columns which only contain 0
+dat_train_RGB=dat_train_RGB[,which(colSums(dat_train_RGB)!=0)];dim(dat_train_RGB)
 dat_train=cbind(dat_train_base,dat_train_RGB);dim(dat_train)
-tm_feature_train = tm_feature_train_base+tm_feature_train_RGB.chic+tm_feature_train_RGB.dog;tm_feature_train
+tm_feature_train = tm_feature_train_base+tm_feature_train_RGB;tm_feature_train
 
 
 # for test feature
 #tm_feature_train_base=system.time(dat_train_base <- feature_base(''));dim(dat_train_base)
-tm_feature_test_RGB <- system.time(dat_test_RGB <- feature_RGB(img_test_dir, "image"))
+# tm_feature_test_RGB <- system.time(dat_test_RGB <- feature_RGB(img_test_dir, "image"))
 
 save(dat_train, file="./output/feature_train.RData")
 save(dat_test, file="./output/feature_test.RData")
@@ -63,21 +59,18 @@ source("./lib/test.R")
 ### Model selection with cross-validation
 # Choosing between different values of interaction depth for GBM
 source("./lib/cross_validation.R")
-depth_values <- seq(3, 11, 2)
+depth_values <- seq(3,11,2)
 err_cv <- array(dim=c(length(depth_values), 2))
-K <- 3  # number of CV folds
-# create timer 
-tm_err_cv=rep(0,length(depth_values))
+K <- 5  # number of CV folds
 for(k in 1:length(depth_values)){
   cat("k=", k, "\n")
   err_cv[k,] <- cv.function(dat_train, label_train, depth_values[k], K)
-  tm_err_cv[k]=system.time(err_cv[k,])
 }
 save(err_cv, file="./output/err_cv.RData")
-err_cv;tm_err_cv # how long for each cv?
+err_cv
 
 # Visualize CV results
-pdf("./figs/cv_results.pdf", width=7, height=5)
+ pdf("./figs/cv_results.pdf", width=7, height=5)
 plot(depth_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
      main="Cross Validation Error", type="n", ylim=c(0, 0.15))
 points(depth_values, err_cv[,1], col="blue", pch=16)
@@ -88,7 +81,7 @@ dev.off()
 
 # Choose the best parameter value
 depth_best <- depth_values[which.min(err_cv[,1])]
-par_best <- list(depth=depth_best)
+par_best <- list(depth=depth_best);par_best
 
 # train the model with the entire training set
 tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
