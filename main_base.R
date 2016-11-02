@@ -31,9 +31,9 @@ dat_train_RGB[is.na(dat_train_RGB)] <- 0
 #dat_train <- cbind(dat_train, dat_train_RGB)
 save(dat_train, file="./output/feature_train.RData")
 
-source("./lib/train.R")
-source("./lib/test.R")
-source("./lib/cross_validation.R")
+source("./lib/train_JG.R")
+source("./lib/test_JG.R")
+source("./lib/cross_validation_JG.R")
 
 plot.errors <- function(err_cv, params, txt){
   #jpeg(file = "./figs/cv_results_SIFT+RGB.jpg")

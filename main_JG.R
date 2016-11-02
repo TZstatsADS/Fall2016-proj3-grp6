@@ -38,7 +38,7 @@ names(label.train) <- c("val")
 label.train$val <- factor(label.train$val)
 
 ### Construct visual feature ----
-source("./lib/feature.R")
+source("./lib/feature_JG.R")
 tm_feature_train <- system.time(dat.train <- feature.JG("sift_features.csv"))
 # Columns are images. Rows are SIFT features. Got to transpose.
 
@@ -55,13 +55,13 @@ label.train.use <- dat.train.labeled$val
 save(dat.train, file="./output/feature_train.RData")
 
 ### Train a classification model with training images
-source("./lib/train.R")
-source("./lib/test.R")
+source("./lib/train_JG.R")
+source("./lib/test_JG.R")
 
 
 ### Model selection with cross-validation ----
 # Choosing between different values of interaction depth for GBM
-source("./lib/cross_validation.R")
+source("./lib/cross_validation_JG.R")
 #depth_values <- seq(3, 11, 2)
 
 params <- list(c("linear", 1, 2)
