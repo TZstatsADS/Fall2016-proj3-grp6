@@ -58,12 +58,10 @@ feature_RGB <- function(img_dir, img_name, data_name=NULL){
   ### Output: an .RData file contains processed features for the images
   
   
-  n_files <- length(list.files(img_dir))*length(img_name)/2 # length either=1000 or 2000
-  #n_r <- 128; n_c <- 128 #used in resize
-
-  nR <- 10
-  nG <- 10
-  nB <- 10
+  n_files <- length(list.files(img_dir))
+  nR <- 5
+  nG <- 5
+  nB <- 5
  
   ### store vectorized pixel values of images
   dat <- array(dim=c(n_files, nR*nG*nB)) 
