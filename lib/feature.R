@@ -66,8 +66,8 @@ feature_RGB <- function(img_dir, img_name, data_name=NULL){
   ### store vectorized pixel values of images
   dat <- array(dim=c(n_files, nR*nG*nB)) 
   for(i in 1:n_files){
-    for(j in img_name){
-    img=readImage(sprintf("%s%s_%04d.jpg",img_dir,j,i)) # read image
+    for(j in length(img_name)){
+    img=readImage(sprintf("%s%s_%04d.jpg",img_dir,img_name[j],i)) # read image
     mat <- imageData(img)
     
    
