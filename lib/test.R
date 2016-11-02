@@ -6,7 +6,7 @@
 ### Project 3
 ### ADS Spring 2016
 
-test <- function(trained_models, dat_test){
+test <- function(trained_model, dat_test){
   
   ### Fit the classfication model with testing data
   

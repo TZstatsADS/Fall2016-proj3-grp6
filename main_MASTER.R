@@ -1,7 +1,7 @@
 #############################################
-### Main execution script for experiments ###
+### Execution script to run testing set   ###
 #############################################
-### Author: Chenxi Huang
+### Author: Group 6
 ### Project 3
 ### ADS Fall 2016
 
@@ -24,6 +24,7 @@ if(length(new.packages)) install.packages(new.packages)
 library(EBImage) # not available (for R version 3.3.1)
 library(base)
 library(data.table) # for fread
+library(caret)
 
 ### Specify directories
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
@@ -80,18 +81,56 @@ source("./lib/test.R")
 #depth_best <- depth_values[which.min(err_cv[,1])]
 #par_best <- list(depth=depth_best)par_best
 
-# train the model with the entire training set
+#################
+## Validation Framework
+#################
+
+#Split data
+trainIndex <- createDataPartition(label_train, p=0.8, list = FALSE)
+trainData <- dat_train[trainIndex,]
+testData <- dat_train[-trainIndex,]
+trainLabel <- label_train[trainIndex]
+testLabel <- label_train[-trainIndex]
+
+#Train Model
+mod_train_validation <- train(trainData, trainLabel)
+#Test Model
+prediction_validation <- test(mod_train_validation, testData)
+
+#Confusion Matrices
+t <- table(prediction_validation$baseline, testLabel)
+confusionMatrix(t)
+adv.t <- table(prediction_validation$adv, testLabel)
+confusionMatrix(adv.t)
+
+
+###############
+# Testing in Class
+####################
+
+# Train the model with the entire training set
 tm_train <- system.time(mod_train <- train(dat_train, label_train))[1]
 save(mod_train, file="./output/trained_model.RData")
 
-tm_train
-### Make prediction 
-pred_test <- test(mod_train, dat_test)
+# Extract features from test set
+tm_feature_test = system.time(feature_eval <- feature(img_dir = "./data/Project3_poodleKFC_test/images_test/",
+                                                    img_name = "image",
+                                                    sift_csv = "./data/Project3_poodleKFC_test/sift features_test.csv",
+                                                    data_name = NULL))
 
+# Predictions using all data
+pred_test <- test(mod_train, feature_eval)
+# Predictions using validation model
+pred_test_using_validationModel <- test(mod_train_validation, feature_eval)
+
+# Summaries
+summary(as.factor(pred_test$baseline))
+summary(as.factor(pred_test$adv))
+
+summary(as.factor(pred_test_using_validationModel$baseline))
+summary(as.factor(pred_test_using_validationModel$adv))
+
+unlist(pred_test$adv)
+
+# Save results
 save(pred_test, file="./output/pred_test.RData")
-
-### Summarize Running Time
-#cat("Time for constructing training features=", tm_feature_train[1], "s \n")
-#cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
-#cat("Time for training model=", tm_train[1], "s \n")
-#cat("Time for making prediction=", tm_test[1], "s \n")
