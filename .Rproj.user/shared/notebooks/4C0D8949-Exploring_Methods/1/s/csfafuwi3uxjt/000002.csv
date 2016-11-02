@@ -1,2 +1,0 @@
-"0","red.channel <- as.vector(as.array(img.chicken[,,1]))"
-"0","hist(red.channel)"
