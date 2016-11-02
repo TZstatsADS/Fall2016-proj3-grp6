@@ -1,9 +1,12 @@
 data/
 *.Rhistory
-.Rproj.user*
+.Rproj.user/
+.Rproj.user
+.Rproj.user/**
+*.Rproj
+.Rproj.user
 .RData
 .Rhistory
 .lib/.Rdata
 .lib/.Rhistory
-.Rproj.user/**
 *.zip
