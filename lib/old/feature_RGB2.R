@@ -136,7 +136,8 @@ feature_HSV <- function(img_dir, img_name, data_name=NULL){
                                        factor(findInterval(mat_hsv[2,], sBin), levels=1:nS), 
                                        factor(findInterval(mat_hsv[3,], vBin), levels=1:nV)))
        hsv_feature <- as.numeric(freq_hsv$Freq)/(ncol(mat)*nrow(mat)) # normalization
-      dat[i,]=rgb_feature
+      q= i + n_files*(j-1) #index to store vectors
+        dat[q,]=hsv_feature
     }}
   
   ### output constructed features
