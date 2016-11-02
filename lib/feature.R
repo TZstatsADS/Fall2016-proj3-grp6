@@ -2,20 +2,23 @@
 ### Construct visual features for training/testing images ###
 #############################################################
 
-### Author: Yuting Ma
+### Author: Chenxi Huang
 ### Project 3
-### ADS Spring 2016
+### ADS Fall 2016
+
+### load libraries
+library(EBImage)
+library(data.table) # for fread
+
 
 feature <- function(img_dir, img_name, data_name=NULL){
   
   ### Construct process features for training/testing images
-  ### Sample simple feature: Extract raw pixel values os features
+  ### Sample simple feature: Extract raw pixel values of features
   
   ### Input: a directory that contains images ready for processing
   ### Output: an .RData file contains processed features for the images
-  
-  ### load libraries
-  library("EBImage")
+
   
   n_files <- length(list.files(img_dir))
   
@@ -26,9 +29,6 @@ feature <- function(img_dir, img_name, data_name=NULL){
   n_c <- ncol(img0)
   
   ### store vectorized pixel values of images
-  # Each row represents an image. Tutorial: Total 1289 images in training set
-  # Each column represents a pixel of the image. Tutorial: Total 256 pixels
-  
   dat <- array(dim=c(n_files, n_r*n_c)) 
   for(i in 1:n_files){
     img <- readImage(paste0(img_dir, img_name, "_", i, ".jpg"))
@@ -41,96 +41,48 @@ feature <- function(img_dir, img_name, data_name=NULL){
   }
   return(dat)
 }
-
-##### Additional feature extraction
-##### JG
-
+##########################################################################
+# store 'sift_features'in 'output' folder
 feature_base <- function(filename){
-  library(readr)
-  data <- read_csv(paste0("./data/", filename))
-
-    # Columns are images. Rows are SIFT features. Got to transpose.
+  data <- fread(paste0("./output/", filename)) # dim(data)=5000 by 2000
   data <- t(data)
   return(data)
 }
-
-feature_RGB <- function(img_dir, data_name){
+##########################################################################
+feature_RGB <- function(img_dir, img_name, data_name=NULL){
   
-  library(EBImage)
-  library(mixtools)
+  ### Construct process features for training/testing images
+  ### Sample simple feature: Extract raw pixel values of features
   
-  list.of.images <- list.files(img_dir)
-  n_files <- length(list.of.images)
+  ### Input: a directory that contains images ready for processing
+  ### Output: an .RData file contains processed features for the images
+  
+  
+  n_files <- length(list.files(img_dir))*length(img_name)/2 # length either=1000 or 2000
+  #n_r <- 128; n_c <- 128 #used in resize
 
-  dat <- array(dim=c(n_files, 12), dimnames = NULL) 
-
-#  for(i in 1:n_files){
+  nR <- 10
+  nG <- 10
+  nB <- 10
+ 
+  ### store vectorized pixel values of images
+  dat <- array(dim=c(n_files, nR*nG*nB)) 
   for(i in 1:n_files){
-    img.name <- list.of.images[i]
-    image.path <- paste0(img_dir, img.name)
-    img <- readImage(image.path)
-#    cat("i=", i, ", Image: ", image.path, "\n")
+    for(j in img_name){
+    img=readImage(sprintf("%s%s_%04d.jpg",img_dir,j,i)) # read image
+    mat <- imageData(img)
     
-    height <- nrow(img)
-    width <-  ncol(img) 
-
-#    cat("Original:",width, ", ", height, "\n" )
-
-    if(width > height){
-      img <- resize(x = img, h = 128)    
-    } else{
-      img <- resize(x = img, w = 128)    
-    }
-
-    height <- nrow(img)
-    width <-  ncol(img) 
-    
-#    cat("Resized:",width, ", ", height, "\n" )
-    
-    red.channel <- as.vector(as.array(img[,,1]))
-    red.channel <- red.channel[red.channel <= 0.95]
-    green.channel <- as.vector(as.array(img[,,2]))
-    green.channel <- green.channel[green.channel <= 0.95]
-    blue.channel <- as.vector(as.array(img[,,3]))
-    blue.channel <- blue.channel[blue.channel <= 0.95]
-    
-    
-    tryCatch({
-    
-    fitted.dist.mix.r <- normalmixEM2comp(red.channel, mu = c(0.25, 0.75), lambda = 0.2, sigsqrd = c(1,0.5),
-                                                   maxit = 100, verb = FALSE)
-    
-    fitted.dist.mix.g <- normalmixEM2comp(green.channel, mu = c(0.25, 0.75), lambda = 0.2, sigsqrd = c(1,0.5),
-                                          maxit = 100, verb = FALSE)
-    
-    fitted.dist.mix.b <- normalmixEM2comp(blue.channel, mu = c(0.25, 0.75), lambda = 0.2, sigsqrd = c(1,0.5),
-                                          maxit = 100, verb = FALSE)
-    
-    dat[i,1] <- fitted.dist.mix.r$mu[1]
-    dat[i,2] <- fitted.dist.mix.r$mu[2]
-    dat[i,3] <- fitted.dist.mix.g$mu[1]
-    dat[i,4] <- fitted.dist.mix.g$mu[2]
-    dat[i,5] <- fitted.dist.mix.b$mu[1]
-    dat[i,6] <- fitted.dist.mix.b$mu[2]
-    dat[i,7] <- fitted.dist.mix.r$sigma[1]
-    dat[i,8] <- fitted.dist.mix.r$sigma[2]
-    dat[i,9] <- fitted.dist.mix.g$sigma[1]
-    dat[i,10] <- fitted.dist.mix.g$sigma[2]
-    dat[i,11] <- fitted.dist.mix.b$sigma[1]
-    dat[i,12] <- fitted.dist.mix.b$sigma[2]
-    
-    }, 
-    warning = function(w){
-      return(NULL)
-    },
-    error = function(e){
-      return(NULL)
-    },
-    finally = {}
-    )
-    
-    cat(img.name, " value: ", dat[i,], "\n")
-  }
+   
+    # Caution: the bins should be consistent across all images!
+    rBin <- seq(0, 1, length.out=nR)
+    gBin <- seq(0, 1, length.out=nG)
+    bBin <- seq(0, 1, length.out=nB)
+    freq_rgb <- as.data.frame(table(factor(findInterval(mat[,,1], rBin), levels=1:nR), 
+                                    factor(findInterval(mat[,,2], gBin), levels=1:nG), 
+                                    factor(findInterval(mat[,,3], bBin), levels=1:nB)))
+    rgb_feature <- as.numeric(freq_rgb$Freq)/(ncol(mat)*nrow(mat)) # normalization
+    dat[i,]=rgb_feature
+  }}
   
   ### output constructed features
   if(!is.null(data_name)){
@@ -138,12 +90,4 @@ feature_RGB <- function(img_dir, data_name){
   }
   return(dat)
 }
-
-feature.JG <- function(filename){
-  library(readr)
-  data <- read_csv(paste0("./data/", filename))
-  data <- t(data)
-  return(data)
-}
-
 
