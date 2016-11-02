@@ -17,7 +17,7 @@ img_train_dir <- "./data/images/"
 #label_train <- as.numeric(unlist(label_train) == "9")
 num_chicken <- 1000
 num_dog <- 1000
-label_train <- c(rep(0, num_chicken), rep(1, num_dog))
+label_train <- c(rep(1, num_chicken), rep(0, num_dog))
 
 
 ### Construct visual feature ----
