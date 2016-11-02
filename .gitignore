@@ -1,4 +1,5 @@
 data/
+!data/zipcode_test/
 *.Rhistory
 .Rproj.user/
 .Rproj.user
@@ -10,3 +11,4 @@ data/
 .lib/.Rhistory
 *.zip
 output/trained_model.RData
+
