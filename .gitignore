@@ -2,7 +2,6 @@ data/
 *.Rhistory
 .Rproj.user/
 .Rproj.user
-.Rproj.user/**
 *.Rproj
 .Rproj.user
 .RData
@@ -10,3 +9,4 @@ data/
 .lib/.Rdata
 .lib/.Rhistory
 *.zip
+output/trained_model.RData
