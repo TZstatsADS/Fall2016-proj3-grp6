@@ -15,6 +15,33 @@ Term: Fall 2016
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
+**Project Description (Model Selected & Results)**
+**Project Summary**:
+**1. Baseline Model** (around 34%)
+Feature: SIFT, 5000
+Model: GBN
+Sub-summary:
+(1) Cross-Validation: tested using K=3 and 5 while keeping other situations unchanged. 
+Turns out K=5 performed slightly better than K=3.
+(2) Depth: tested the best depth values using a sequence of values: seq(3,11,by=2) on both the base model and the advanced model below. 
+depth=11 performed better in most of the cases. 
+(3) n.trees for GBM: tested ntrees=100,200,500,1000,2000.
+Turns out 200 and 1000 performed slightly better than other values. However, it took too long to use n.trees=1000 or even 2000, so we used n.trees=100 or 200 when establishing advanced models. 
+
+**2. Feature Selection** (85+%)
+(1) We firstly observed that the background colors differ. For example, chicken is usually placed on plates or other containers, while dogs are usually running in the grass, lying in the sofa or sitting in the living room. Also, although the color of chicken is similar to that of a dog, among the dogs the colors vary much more than among the chicken wings. Dogs present different colors due to different breeds.
+So we choose to add RGB to the original SIFT. 
+We tested 125, 512, and 1000 new RGB features (i.e., each with bin number per color=5, 8, and 10, respectively). Turns out 1000 new features perform the best. 
+ (2) We also tried to use PCA to trim down the feature dimensionality. However, after a few trials, we found out that using PCA did not improve that much so we discarded this idea. 
+Results: add 1000 new RGB features to SIFT (5000), leading to now totally 6000 features. 
+
+**3. Model Selection**
+
+
+
+
+
+
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
 ```
