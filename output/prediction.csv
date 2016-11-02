@@ -34,7 +34,7 @@
 "image_0033.jpg",0,1
 "image_0034.jpg",0,0
 "image_0035.jpg",0,0
-"image_0036.jpg",0,0
+"image_0036.jpg",0,1
 "image_0037.jpg",1,1
 "image_0038.jpg",1,1
 "image_0039.jpg",0,1
@@ -42,7 +42,7 @@
 "image_0041.jpg",1,1
 "image_0042.jpg",0,0
 "image_0043.jpg",1,1
-"image_0044.jpg",1,0
+"image_0044.jpg",1,1
 "image_0045.jpg",1,1
 "image_0046.jpg",1,1
 "image_0047.jpg",1,0
@@ -72,7 +72,7 @@
 "image_0071.jpg",1,0
 "image_0072.jpg",1,0
 "image_0073.jpg",0,1
-"image_0074.jpg",0,0
+"image_0074.jpg",0,1
 "image_0075.jpg",1,1
 "image_0076.jpg",1,1
 "image_0077.jpg",1,1
@@ -91,7 +91,7 @@
 "image_0090.jpg",1,0
 "image_0091.jpg",0,1
 "image_0092.jpg",0,0
-"image_0093.jpg",0,0
+"image_0093.jpg",0,1
 "image_0094.jpg",0,0
 "image_0095.jpg",0,0
 "image_0096.jpg",1,1
@@ -142,7 +142,7 @@
 "image_0141.jpg",1,1
 "image_0142.jpg",1,1
 "image_0143.jpg",1,0
-"image_0144.jpg",1,1
+"image_0144.jpg",0,1
 "image_0145.jpg",0,1
 "image_0146.jpg",1,1
 "image_0147.jpg",1,1
@@ -162,11 +162,11 @@
 "image_0161.jpg",1,0
 "image_0162.jpg",0,1
 "image_0163.jpg",0,0
-"image_0164.jpg",0,0
+"image_0164.jpg",1,0
 "image_0165.jpg",1,0
 "image_0166.jpg",1,1
 "image_0167.jpg",1,1
-"image_0168.jpg",1,1
+"image_0168.jpg",1,0
 "image_0169.jpg",0,1
 "image_0170.jpg",0,1
 "image_0171.jpg",0,0
@@ -199,7 +199,7 @@
 "image_0198.jpg",1,0
 "image_0199.jpg",1,0
 "image_0200.jpg",1,0
-"image_0201.jpg",0,1
+"image_0201.jpg",0,0
 "image_0202.jpg",0,0
 "image_0203.jpg",1,0
 "image_0204.jpg",1,1
@@ -216,7 +216,7 @@
 "image_0215.jpg",0,0
 "image_0216.jpg",1,1
 "image_0217.jpg",0,1
-"image_0218.jpg",1,0
+"image_0218.jpg",0,0
 "image_0219.jpg",0,1
 "image_0220.jpg",0,1
 "image_0221.jpg",0,0
@@ -290,7 +290,7 @@
 "image_0289.jpg",0,0
 "image_0290.jpg",0,0
 "image_0291.jpg",1,0
-"image_0292.jpg",0,1
+"image_0292.jpg",0,0
 "image_0293.jpg",1,0
 "image_0294.jpg",1,1
 "image_0295.jpg",1,1
@@ -397,7 +397,7 @@
 "image_0396.jpg",0,0
 "image_0397.jpg",1,0
 "image_0398.jpg",1,1
-"image_0399.jpg",0,0
+"image_0399.jpg",1,0
 "image_0400.jpg",0,0
 "image_0401.jpg",0,0
 "image_0402.jpg",0,1
@@ -536,13 +536,13 @@
 "image_0535.jpg",1,1
 "image_0536.jpg",1,1
 "image_0537.jpg",1,1
-"image_0538.jpg",1,1
+"image_0538.jpg",1,0
 "image_0539.jpg",1,0
 "image_0540.jpg",1,0
 "image_0541.jpg",1,1
 "image_0542.jpg",1,0
 "image_0543.jpg",0,1
-"image_0544.jpg",1,1
+"image_0544.jpg",0,1
 "image_0545.jpg",1,0
 "image_0546.jpg",1,0
 "image_0547.jpg",0,0
@@ -604,7 +604,7 @@
 "image_0603.jpg",1,1
 "image_0604.jpg",1,1
 "image_0605.jpg",0,1
-"image_0606.jpg",1,1
+"image_0606.jpg",0,1
 "image_0607.jpg",1,0
 "image_0608.jpg",0,1
 "image_0609.jpg",1,1
@@ -625,7 +625,7 @@
 "image_0624.jpg",0,0
 "image_0625.jpg",0,0
 "image_0626.jpg",1,1
-"image_0627.jpg",1,0
+"image_0627.jpg",1,1
 "image_0628.jpg",1,0
 "image_0629.jpg",1,1
 "image_0630.jpg",1,0
@@ -802,10 +802,10 @@
 "image_0801.jpg",0,1
 "image_0802.jpg",1,1
 "image_0803.jpg",0,0
-"image_0804.jpg",1,1
+"image_0804.jpg",1,0
 "image_0805.jpg",1,1
 "image_0806.jpg",0,0
-"image_0807.jpg",0,0
+"image_0807.jpg",0,1
 "image_0808.jpg",0,0
 "image_0809.jpg",1,0
 "image_0810.jpg",1,1
@@ -815,7 +815,7 @@
 "image_0814.jpg",1,0
 "image_0815.jpg",0,0
 "image_0816.jpg",0,0
-"image_0817.jpg",1,0
+"image_0817.jpg",1,1
 "image_0818.jpg",1,0
 "image_0819.jpg",0,1
 "image_0820.jpg",0,0
@@ -957,7 +957,7 @@
 "image_0956.jpg",0,0
 "image_0957.jpg",1,1
 "image_0958.jpg",0,0
-"image_0959.jpg",0,1
+"image_0959.jpg",0,0
 "image_0960.jpg",1,0
 "image_0961.jpg",0,1
 "image_0962.jpg",0,1
@@ -992,7 +992,7 @@
 "image_0991.jpg",0,0
 "image_0992.jpg",0,0
 "image_0993.jpg",0,0
-"image_0994.jpg",0,1
+"image_0994.jpg",0,0
 "image_0995.jpg",1,0
 "image_0996.jpg",1,1
 "image_0997.jpg",1,1
@@ -1002,7 +1002,7 @@
 "image_1001.jpg",0,1
 "image_1002.jpg",0,0
 "image_1003.jpg",0,0
-"image_1004.jpg",1,1
+"image_1004.jpg",0,1
 "image_1005.jpg",0,1
 "image_1006.jpg",1,1
 "image_1007.jpg",1,0
@@ -1028,7 +1028,7 @@
 "image_1027.jpg",0,1
 "image_1028.jpg",0,0
 "image_1029.jpg",0,1
-"image_1030.jpg",0,1
+"image_1030.jpg",1,1
 "image_1031.jpg",0,1
 "image_1032.jpg",1,1
 "image_1033.jpg",1,1
@@ -1040,7 +1040,7 @@
 "image_1039.jpg",0,0
 "image_1040.jpg",1,0
 "image_1041.jpg",1,1
-"image_1042.jpg",1,0
+"image_1042.jpg",0,0
 "image_1043.jpg",1,1
 "image_1044.jpg",1,1
 "image_1045.jpg",1,1
@@ -1101,9 +1101,9 @@
 "image_1100.jpg",0,0
 "image_1101.jpg",1,1
 "image_1102.jpg",0,0
-"image_1103.jpg",0,1
+"image_1103.jpg",0,0
 "image_1104.jpg",0,1
-"image_1105.jpg",0,1
+"image_1105.jpg",0,0
 "image_1106.jpg",0,0
 "image_1107.jpg",0,0
 "image_1108.jpg",1,0
@@ -1190,7 +1190,7 @@
 "image_1189.jpg",1,1
 "image_1190.jpg",0,1
 "image_1191.jpg",0,1
-"image_1192.jpg",0,0
+"image_1192.jpg",0,1
 "image_1193.jpg",0,0
 "image_1194.jpg",1,1
 "image_1195.jpg",1,1
@@ -1199,7 +1199,7 @@
 "image_1198.jpg",1,1
 "image_1199.jpg",0,0
 "image_1200.jpg",1,0
-"image_1201.jpg",1,1
+"image_1201.jpg",1,0
 "image_1202.jpg",0,0
 "image_1203.jpg",0,0
 "image_1204.jpg",1,1
@@ -1274,7 +1274,7 @@
 "image_1273.jpg",1,1
 "image_1274.jpg",0,0
 "image_1275.jpg",1,0
-"image_1276.jpg",1,0
+"image_1276.jpg",0,0
 "image_1277.jpg",1,1
 "image_1278.jpg",1,1
 "image_1279.jpg",0,0
@@ -1354,7 +1354,7 @@
 "image_1353.jpg",1,1
 "image_1354.jpg",1,0
 "image_1355.jpg",1,1
-"image_1356.jpg",1,0
+"image_1356.jpg",0,0
 "image_1357.jpg",1,1
 "image_1358.jpg",0,0
 "image_1359.jpg",0,0
@@ -1470,7 +1470,7 @@
 "image_1469.jpg",0,0
 "image_1470.jpg",0,0
 "image_1471.jpg",1,1
-"image_1472.jpg",0,0
+"image_1472.jpg",1,0
 "image_1473.jpg",0,0
 "image_1474.jpg",1,1
 "image_1475.jpg",0,0
@@ -1563,7 +1563,7 @@
 "image_1562.jpg",0,0
 "image_1563.jpg",0,0
 "image_1564.jpg",1,1
-"image_1565.jpg",1,0
+"image_1565.jpg",0,0
 "image_1566.jpg",1,0
 "image_1567.jpg",0,1
 "image_1568.jpg",1,1
@@ -1609,7 +1609,7 @@
 "image_1608.jpg",0,1
 "image_1609.jpg",1,1
 "image_1610.jpg",0,1
-"image_1611.jpg",0,0
+"image_1611.jpg",0,1
 "image_1612.jpg",1,0
 "image_1613.jpg",0,1
 "image_1614.jpg",0,0
@@ -1666,7 +1666,7 @@
 "image_1665.jpg",0,0
 "image_1666.jpg",0,0
 "image_1667.jpg",0,0
-"image_1668.jpg",0,1
+"image_1668.jpg",1,1
 "image_1669.jpg",1,1
 "image_1670.jpg",0,0
 "image_1671.jpg",0,0
@@ -1676,7 +1676,7 @@
 "image_1675.jpg",1,1
 "image_1676.jpg",1,1
 "image_1677.jpg",1,1
-"image_1678.jpg",1,1
+"image_1678.jpg",1,0
 "image_1679.jpg",1,1
 "image_1680.jpg",1,1
 "image_1681.jpg",1,0
@@ -1715,7 +1715,7 @@
 "image_1714.jpg",1,0
 "image_1715.jpg",1,1
 "image_1716.jpg",1,0
-"image_1717.jpg",1,1
+"image_1717.jpg",1,0
 "image_1718.jpg",1,1
 "image_1719.jpg",0,1
 "image_1720.jpg",1,1
@@ -1847,7 +1847,7 @@
 "image_1846.jpg",1,1
 "image_1847.jpg",0,0
 "image_1848.jpg",1,1
-"image_1849.jpg",1,0
+"image_1849.jpg",0,0
 "image_1850.jpg",1,1
 "image_1851.jpg",0,1
 "image_1852.jpg",0,0
@@ -1941,7 +1941,7 @@
 "image_1940.jpg",1,0
 "image_1941.jpg",0,1
 "image_1942.jpg",0,0
-"image_1943.jpg",0,1
+"image_1943.jpg",1,1
 "image_1944.jpg",0,1
 "image_1945.jpg",0,1
 "image_1946.jpg",1,0
@@ -1970,7 +1970,7 @@
 "image_1969.jpg",1,1
 "image_1970.jpg",1,0
 "image_1971.jpg",0,0
-"image_1972.jpg",1,1
+"image_1972.jpg",1,0
 "image_1973.jpg",0,0
 "image_1974.jpg",0,0
 "image_1975.jpg",1,1
