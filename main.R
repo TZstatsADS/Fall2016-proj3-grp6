@@ -9,11 +9,15 @@
 setwd('C:/Users/celia/Desktop/Project 3')
 
 #load libraries
-#source("https://bioconductor.org/biocLite.R")
-#biocLite("EBImage")
+source("https://bioconductor.org/biocLite.R")
+biocLite("EBImage")
+install.packages('base')
+install.packages('data.table')
+install.packages('gbm')
 library(EBImage) # not available (for R version 3.3.1)
 library(base)
 library(data.table) # for fread
+library(gbm)
 
 
 img_train_dir <- "./data/zipcode_train/"
