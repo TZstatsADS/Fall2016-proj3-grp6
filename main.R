@@ -46,7 +46,7 @@ source("./lib/feature.R")
 tm_feature_train = system.time(dat_train <- feature(img_dir = "./data/images/",
                                                         img_name = c("chicken", "dog"),
                                                         sift_csv = "./data/sift_features.csv",
-                                                        data_name = NULL))
+                                                        data_name = "train"))
 
 tm_feature_train
 ### Train a classification model with training images
@@ -112,11 +112,13 @@ confusionMatrix(adv.t)
 tm_train <- system.time(mod_train <- train(dat_train, label_train))[1]
 save(mod_train, file="./output/trained_model.RData")
 
+image.dir <- "./data/Project3_poodleKFC_test/images_test/"
+
 # Extract features from test set
-tm_feature_test = system.time(feature_eval <- feature(img_dir = "./data/Project3_poodleKFC_test/images_test/",
+tm_feature_test = system.time(feature_eval <- feature(img_dir = image.dir,
                                                     img_name = "image",
                                                     sift_csv = "./data/Project3_poodleKFC_test/sift features_test.csv",
-                                                    data_name = NULL))
+                                                    data_name = "eval"))
 
 # Predictions using all data
 pred_test <- test(mod_train, feature_eval)
@@ -130,7 +132,14 @@ summary(as.factor(pred_test$adv))
 summary(as.factor(pred_test_using_validationModel$baseline))
 summary(as.factor(pred_test_using_validationModel$adv))
 
-unlist(pred_test$adv)
+# Generate output CSV
+a <- list.files(image.dir)
+final.prediction <- cbind(pred_test$baseline, pred_test$adv)
+final.prediction <- as.data.frame(final.prediction)
+names(final.prediction) <- c("baseline", "advanced")
+row.names(final.prediction) <- a 
+write.csv(final.prediction, file = "./output/prediction.csv")
+
 
 # Save results
 save(pred_test, file="./output/pred_test.RData")

@@ -60,7 +60,7 @@ feature <- function(img_dir, img_name, sift_csv, data_name=null) {
         
         ### output constructed features
         if(!is.null(data_name)){
-                save(dat, file=paste0("./output/feature_eval", data_name, ".RData"))
+                save(dat, file=paste0("./output/feature_", data_name, ".RData"))
         }
         return(dat)
 }
