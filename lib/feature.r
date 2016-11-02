@@ -55,7 +55,8 @@ feature <- function(img_dir, img_name, sift_csv, data_name=null) {
         sift <- as.data.frame(sift)
         dat <- cbind(sift, dat)
         
-        dat <- dat[,which(colSums(dat)!=0)]
+        # Remove columns with zero value
+        #dat <- dat[,which(colSums(dat)!=0)]
         
         ### output constructed features
         if(!is.null(data_name)){

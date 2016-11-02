@@ -42,11 +42,12 @@ label_train=c(rep(1,num.chicken),rep(0,num.dog)) #length=2000
 ### Construct visual feature
 source("./lib/feature.R")
 
-tm_feature_train_base = system.time(dat_train <- feature(img_dir = "./data/images/",
+tm_feature_train = system.time(dat_train <- feature(img_dir = "./data/images/",
                                                         img_name = c("chicken", "dog"),
                                                         sift_csv = "./data/sift_features.csv",
                                                         data_name = NULL))
 
+tm_feature_train
 ### Train a classification model with training images
 source("./lib/train.R")
 source("./lib/test.R")
@@ -81,8 +82,9 @@ source("./lib/test.R")
 
 # train the model with the entire training set
 tm_train <- system.time(mod_train <- train(dat_train, label_train))[1]
-save(fit_train, file="./output/fit_train.RData")
+save(mod_train, file="./output/trained_model.RData")
 
+tm_train
 ### Make prediction 
 pred_test <- test(mod_train, dat_test)
 
