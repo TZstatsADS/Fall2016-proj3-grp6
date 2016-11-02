@@ -1,5 +1,2 @@
-data/
-*.RData
-*.Rhistory
-.Rproj.user/
-.Rproj.user\
+Data/**
+/.Rproj.user/**
