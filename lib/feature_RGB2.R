@@ -16,7 +16,7 @@ library(data.table) # for fread
 library(grDevices) #for HSV
 
 
-feature <- function(img_dir, img_name, data_name=NULL){
+feature_tutorial <- function(img_dir, img_name, data_name=NULL){
   
   ### Construct process features for training/testing images
   ### Sample simple feature: Extract raw pixel values of features
@@ -48,6 +48,10 @@ feature <- function(img_dir, img_name, data_name=NULL){
 }
 ##########################################################################
 # store 'sift_features'in 'output' folder
+
+
+feature <- function()
+
 feature_base <- function(filename){
   data <- fread(paste0("./output/", filename)) # dim(data)=5000 by 2000
   data <- t(data)
@@ -94,6 +98,11 @@ feature_RGB <- function(img_dir, img_name, data_name=NULL){
   }
   return(dat)
 }
+
+
+
+
+
 
 ################################################################################
 feature_HSV <- function(img_dir, img_name, data_name=NULL){

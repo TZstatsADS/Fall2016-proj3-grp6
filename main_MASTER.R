@@ -34,9 +34,10 @@ label_train=c(rep(1,num.chicken),rep(0,num.dog)) #length=2000
 source("./lib/feature.R")
 
 tm_feature_train_base = system.time(dat_train_base <- feature_base('sift_features.csv'))
-#dim(dat_train_base)
-# feature RGB
 tm_feature_train_RGB=system.time(dat_train_RGB <- feature_RGB(img_train_dir, c('chicken','dog')))
+
+
+
 #dim(dat_train_RGB)
 #tm_feature_train_RGB
 
@@ -56,7 +57,7 @@ tm_feature_train = tm_feature_train_base+tm_feature_train_RGB
 # tm_feature_test_RGB <- system.time(dat_test_RGB <- feature_RGB(img_test_dir, "image"))
 
 save(dat_train, file="./output/feature_train.RData")
-save(dat_test, file="./output/feature_test.RData")|
+save(dat_test, file="./output/feature_test.RData")
 
 ### Train a classification model with training images
 source("./lib/train.R")
@@ -65,6 +66,7 @@ source("./lib/test.R")
 ### Model selection with cross-validation
 # Choosing between different values of interaction depth for GBM
 source("./lib/cross_validation.R")
+
 depth_values <- seq(3, 5, 8, 11)
 err_cv <- array(dim=c(length(depth_values), 2))
 K <- 5  # number of CV folds
