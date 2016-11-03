@@ -51,7 +51,7 @@ Here is a table to show part of our result.<br>
 
 
 
-
+**Note:for the codes to run smoothly, please download "Project3_poodleKFC_test.zip", unzip it and add it into the data file.
 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
