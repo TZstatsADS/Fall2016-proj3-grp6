@@ -37,14 +37,14 @@ Turns out 200 and 1000 performed slightly better than other values. However, it 
 (1) We firstly observed that the background colors differ. For example, chicken is usually placed on plates or other containers, while dogs are usually running in the grass, lying in the sofa or sitting in the living room. Also, although the color of chicken is similar to that of a dog, among the dogs the colors vary much more than among the chicken wings. Dogs present different colors due to different breeds.
 So we choose to add RGB to the original SIFT. 
 We tested 125, 512, and 1000 new RGB features (i.e., each with bin number per color=5, 8, and 10, respectively). Turns out 1000 new features perform the best. 
- (2) We also tried to use PCA to trim down the feature dimensionality. However, after a few trials, we found out that using PCA did not improve that much so we discarded this idea. 
+(2) We also tried to use PCA to trim down the feature dimensionality. However, after a few trials, we found out that using PCA did not improve that much so we discarded this idea. 
 Results: add 1000 new RGB features to SIFT (5000), leading to now totally 6000 features. 
 
 **3. Model Selection**
 We developed our model by three categories: Linear boundary model, Non-linear boundary model and boosting method.
-(1) Linear boundary model : logistic, SVM with linear kernel. We tried but linear separation merged. This is an important indication that we might lose lots of information contained in feature space if we use a linear boundary.
-(2) Non-linear model : By parameterized model, we tried the SVM with radial and polynomial model. And we used PCA to reduce the dimensionality of the feature space first. And then we tried Naive Bayes, which had a higher error rate because independece assumption cannot be met according to the way to extract SIFT(the SIFT features can be highly negatively related).
-(3) Boosting model : We finally went back to the boosting models. We tried Random Forest (by both bagging and boosting), and Gradient boosting machine (regularization both using shrinkage and bagging). We believe the properties of GBM (i.e. No boundary shape restriction; no strong assumption; inner mechanism to remedy overfitting problem).
+(1) Linear boundary model : logistic, SVM with linear kernel. We tried but linear separation merged. This is an important indication that we might lose lots of information contained in feature space if we use a linear boundary.<br>
+(2) Non-linear model : By parameterized model, we tried the SVM with radial and polynomial model. And we used PCA to reduce the dimensionality of the feature space first. And then we tried Naive Bayes, which had a higher error rate because independece assumption cannot be met according to the way to extract SIFT(the SIFT features can be highly negatively related).<br>
+(3) Boosting model : We finally went back to the boosting models. We tried Random Forest (by both bagging and boosting), and Gradient boosting machine (regularization both using shrinkage and bagging). We believe the properties of GBM (i.e. No boundary shape restriction; no strong assumption; inner mechanism to remedy overfitting problem).<br>
 Here is a table to show part of our result.<br>
 ![image](https://github.com/TZstatsADS/Fall2016-proj3-grp6/blob/master/figs/model_comparision_table.png)
 
