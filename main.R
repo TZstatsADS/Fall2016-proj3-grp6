@@ -6,13 +6,14 @@
 ### ADS Fall 2016
 
 
-
+#### notice #####
+# for the codes to run smoothly, please download "Project3_poodleKFC_test.zip", unzip it and add it into the data file.
 # Trees 100
 # CV 5
 # Bins for colors 10, new features = 10*10*10=1000
 # error rate 9%
 # Time to train 17 minutes
-
+# please download 
 
 ### Specify directories
 
