@@ -26,6 +26,7 @@ library(base)
 library(data.table) # for fread
 library(caret)
 library(rstudioapi)
+library(gbm)
 
 ### Specify directories
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
