@@ -15,7 +15,8 @@ Term: Fall 2016
 	
 **Contribution statement**:
 All members designed the study. Jaime developed baseline classification model for evaluation. All members explored feature engineering for improving the baseline model. Chenxi discussed and designed the feature selections. Hayoung, Huilong, Jaime and Sen discussed and designed the model selections. All members carried out the computation for model evaluation. All team members contributed to the GitHub repository and helped Huilong to prepare the presentation. Huilong is the presenter and prepared the presentation mostly. All team members approve our work presented in our GitHub repository including this contribution statement.
-**Note:for the codes to run smoothly, please download "Project3_poodleKFC_test.zip", unzip it and add it into the data file.
+
+**Note:for the codes to run smoothly, please download "Project3_poodleKFC_test.zip", unzip it and add it into the data file.**
 
 
 ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
