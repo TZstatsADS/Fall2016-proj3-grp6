@@ -17,7 +17,7 @@
 ### Specify directories
 
 #############
-list.of.packages <- c("EBImage", "base", "data.table", "caret")
+list.of.packages <- c("EBImage", "base", "data.table", "caret",'rstudioapi')
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
@@ -25,6 +25,7 @@ library(EBImage) # not available (for R version 3.3.1)
 library(base)
 library(data.table) # for fread
 library(caret)
+library(rstudioapi)
 
 ### Specify directories
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
