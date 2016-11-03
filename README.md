@@ -40,7 +40,7 @@ We tested 125, 512, and 1000 new RGB features (i.e., each with bin number per co
 (2) We also tried to use PCA to trim down the feature dimensionality. However, after a few trials, we found out that using PCA did not improve that much so we discarded this idea. 
 Results: add 1000 new RGB features to SIFT (5000), leading to now totally 6000 features. 
 
-**3. Model Selection**
+**3. Model Selection** (around 90%)
 We developed our model by three categories: Linear boundary model, Non-linear boundary model and boosting method.
 (1) Linear boundary model : logistic, SVM with linear kernel. We tried but linear separation merged. This is an important indication that we might lose lots of information contained in feature space if we use a linear boundary.<br>
 (2) Non-linear model : By parameterized model, we tried the SVM with radial and polynomial model. And we used PCA to reduce the dimensionality of the feature space first. And then we tried Naive Bayes, which had a higher error rate because independece assumption cannot be met according to the way to extract SIFT(the SIFT features can be highly negatively related).<br>
