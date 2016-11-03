@@ -46,7 +46,7 @@ We developed our model by three categories: Linear boundary model, Non-linear bo
 (2) Non-linear model : By parameterized model, we tried the SVM with radial and polynomial model. And we used PCA to reduce the dimensionality of the feature space first. And then we tried Naive Bayes, which had a higher error rate because independece assumption cannot be met according to the way to extract SIFT(the SIFT features can be highly negatively related).
 (3) Boosting model : We finally went back to the boosting models. We tried Random Forest (by both bagging and boosting), and Gradient boosting machine (regularization both using shrinkage and bagging). We believe the properties of GBM (i.e. No boundary shape restriction; no strong assumption; inner mechanism to remedy overfitting problem).
 Here is a table to show part of our result.
-
+![image](model_comparision_table.png)
 
 
 
