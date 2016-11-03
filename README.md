@@ -1,4 +1,4 @@
-# Project: Labradoodle or Fried Chicken? 
+﻿# Project: Labradoodle or Fried Chicken? 
 ![image](https://s-media-cache-ak0.pinimg.com/236x/6b/01/3c/6b013cd759c69d17ffd1b67b3c1fbbbf.jpg)
 ### [Full Project Description](doc/project3_desc.html)
 
@@ -23,10 +23,10 @@ All members designed the study. Jaime developed baseline classification model fo
 
 **Project Description (Model Selected & Results)**
 Summary: In this project, we developed a new method and improved 
-the classification accuracy for images of dogs and chicken to **90%**. 
+the classification accuracy for images of dogs and chicken to a maximum of 90%. We suspect our generalization error is **80%**.
 
 **Project Summary**:
-**1. Baseline Model** (around 34%)
+**1. Baseline Model** (34% average error)
 Feature: SIFT, 5000
 Model: GBN
 Sub-summary:
