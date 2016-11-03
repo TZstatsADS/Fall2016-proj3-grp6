@@ -17,7 +17,7 @@
 ### Specify directories
 
 #############
-list.of.packages <- c("EBImage", "base", "data.table", "caret",'rstudioapi')
+list.of.packages <- c("EBImage", "base", "data.table", "caret",'rstudioapi','gbm')
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
